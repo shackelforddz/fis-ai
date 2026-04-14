@@ -27,12 +27,12 @@ export function BorrowerCard({ borrower }: BorrowerCardProps) {
   return (
     <Link
       href={`/borrower/${borrower.id}`}
-      className="bg-card rounded-xl p-6 flex gap-6 items-center overflow-hidden hover:bg-card/80 transition-colors group"
+      className="bg-gray-900 rounded-xl p-6 flex gap-6 items-center overflow-hidden hover:bg-card/80 transition-colors group"
     >
       {/* Score Sidebar */}
       <div
         className={cn(
-          "flex flex-col items-center justify-between min-h-[200px] p-6 rounded-xl shrink-0",
+          "flex flex-col items-center justify-between min-h-[200px] min-w-[160px] p-6 rounded-xl shrink-0",
           scoreColor
         )}
       >
@@ -82,16 +82,16 @@ export function BorrowerCard({ borrower }: BorrowerCardProps) {
         </div>
 
         {/* Description */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4">
           <p className="text-base text-foreground leading-normal">
+            {borrower.suggestedProduct
+              ? `${borrower.suggestedProduct}`
+              : borrower.recommendedAction || ""}
+          </p>
+          <p className="text-sm text-muted-foreground opacity-70">
             {borrower.signals[0]?.text}.{" "}
             {borrower.suggestedProduct
               ? `Eligible for ${borrower.suggestedProduct.toLowerCase()}.`
-              : borrower.recommendedAction || ""}
-          </p>
-          <p className="text-xs text-muted-foreground opacity-70">
-            {borrower.suggestedProduct
-              ? `Recommend "${borrower.suggestedProduct}"`
               : borrower.recommendedAction || ""}
           </p>
         </div>

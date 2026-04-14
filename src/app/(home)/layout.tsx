@@ -1,5 +1,6 @@
 import { Nav } from "@/components/layout/nav";
 import { CopilotPanel } from "@/components/layout/copilot-panel";
+import { GradientBg } from "@/components/layout/gradient-bg";
 
 export default function HomeLayout({
   children,
@@ -9,11 +10,7 @@ export default function HomeLayout({
   return (
     <div className="relative flex gap-4 p-4 h-full w-full bg-background overflow-hidden">
       {/* Background gradient glow */}
-      <img
-        src="/gradient.svg"
-        alt=""
-        className="pointer-events-none absolute top-0 left-0 w-full max-w-[1440px] z-0 opacity-50"
-      />
+      <GradientBg className="pointer-events-none absolute top-0 left-0 w-full max-w-[1440px] h-[298px] z-0 opacity-50" />
 
       <Nav className="relative z-10" />
 

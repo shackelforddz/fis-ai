@@ -19,12 +19,12 @@ import {
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { icon: Home, label: "Dashboard", href: "/" },
+  { icon: Home, label: "Home", href: "/" },
   { icon: ListChecks, label: "Opportunities", href: "/opportunities" },
-  { icon: LayoutList, label: "Covenants", href: "/covenants" },
-  { icon: ClipboardList, label: "Documents", href: "/documents" },
+  { icon: LayoutList, label: "Risks", href: "/risks" },
+  { icon: ClipboardList, label: "Loan Evaluation", href: "/loan-evaluation" },
   { icon: Users, label: "Borrowers", href: "/borrowers" },
-  { icon: LineChart, label: "Analytics", href: "/analytics" },
+  { icon: LineChart, label: "Data", href: "/data" },
 ];
 
 export function Nav({ className }: { className?: string }) {
@@ -50,9 +50,7 @@ export function Nav({ className }: { className?: string }) {
                     ? "bg-accent text-accent-foreground"
                     : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                 )}
-                onClick={() => {
-                  window.location.href = item.href;
-                }}
+                render={<Link href={item.href} />}
               >
                 <item.icon className="size-5" />
               </TooltipTrigger>

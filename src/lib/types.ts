@@ -8,6 +8,30 @@ export type OpportunityStatus =
   | "Monitor";
 export type RiskLevel = "Low" | "Medium" | "High";
 export type SignalStrength = "Weak" | "Moderate" | "Strong";
+
+export type WarningType =
+  | "Liquidity & Payment Risk"
+  | "Credit & Structural Risk"
+  | "Asset & Market Risk"
+  | "Operational & Compliance Risk";
+
+export type RecommendedActionType =
+  | "Mitigate"
+  | "Restructure"
+  | "Recapitalize"
+  | "Sell";
+
+export interface RiskEntry {
+  id: string;
+  borrowerId: string;
+  borrowerName: string;
+  facilityId: string;
+  riskScore: number;
+  recommendedAction: RecommendedActionType;
+  actionDescription: string;
+  warningType: WarningType;
+  reasoning: string;
+}
 export type Trend = "improving" | "stable" | "declining";
 export type CovenantStatus =
   | "Compliant"
@@ -200,4 +224,21 @@ export interface SOSFiling {
   annualReportStatus: string;
   annualReportDueDate: string;
   recentChanges: string[];
+}
+
+export type LoanAnalysis = "Likely approved" | "Review needed" | "Likely declined";
+export type LoanStatus = "In Analysis" | "Pending Review" | "Under Review" | "Approved" | "Declined";
+export type LoanActionType = "Create Credit Memo" | "Create Restructuring" | "Create Scenario";
+export type LoanType = "CRE Refinance" | "Term Loan" | "Revolving Credit" | "SBA 7(a)" | "Construction" | "Equipment Finance";
+
+export interface LoanEvaluation {
+  id: string;
+  borrowerName: string;
+  loanAmount: number;
+  loanType: LoanType;
+  status: LoanStatus;
+  analysis: LoanAnalysis;
+  action: LoanActionType;
+  submissionDate: string;
+  assignedOfficer: string;
 }

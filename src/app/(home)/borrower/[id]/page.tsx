@@ -148,11 +148,11 @@ export default function BorrowerDetailPage({
       </nav>
 
       {/* 2. Borrower Hero Card */}
-      <div className="bg-card rounded-xl p-6 flex gap-6 items-start">
+      <div className="bg-gray-900 rounded-xl p-6 flex gap-6 items-start">
         {/* Score Sidebar */}
         <div
           className={cn(
-            "flex flex-col items-center justify-between h-full min-w-[240px] p-6 rounded-xl shrink-0",
+            "flex flex-col items-center justify-between h-full min-w-[220px] p-6 rounded-xl shrink-0",
             scoreColor
           )}
         >
@@ -201,7 +201,7 @@ export default function BorrowerDetailPage({
                 ? `Eligible for ${borrower.suggestedProduct.toLowerCase()}.`
                 : borrower.recommendedAction || ""}
             </p>
-            <p className="text-xs text-muted-foreground opacity-70">
+            <p className="text-sm text-muted-foreground opacity-70">
               {borrower.suggestedProduct
                 ? `Recommend "${borrower.suggestedProduct}"`
                 : borrower.recommendedAction || ""}
