@@ -2,8 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { Search, SlidersVertical, ChevronDown, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Search, SlidersVertical, ChevronDown, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -33,31 +32,6 @@ function formatCurrency(amount: number) {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount);
-}
-
-function AnalysisBadge({ analysis }: { analysis: string }) {
-  if (analysis === "Likely approved") {
-    return (
-      <Badge variant="outline" className="rounded-full border-primary/30 text-primary bg-primary/10">
-        {analysis}
-      </Badge>
-    );
-  }
-  if (analysis === "Review needed") {
-    return (
-      <Badge variant="outline" className="rounded-full border-yellow-500/30 text-yellow-500 bg-yellow-500/10">
-        {analysis}
-      </Badge>
-    );
-  }
-  if (analysis === "Likely declined") {
-    return (
-      <Badge variant="outline" className="rounded-full border-[#EB1F32]/30 text-[#EB1F32] bg-[#EB1F32]/10">
-        {analysis}
-      </Badge>
-    );
-  }
-  return <Badge variant="outline" className="rounded-full">{analysis}</Badge>;
 }
 
 export default function LoanEvaluationPage() {
@@ -179,7 +153,7 @@ export default function LoanEvaluationPage() {
                 <TableHead>Type</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Analysis</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead className="text-right w-0">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -202,14 +176,18 @@ export default function LoanEvaluationPage() {
                   <TableCell className="text-sm text-muted-foreground">
                     {loan.status}
                   </TableCell>
-                  <TableCell>
-                    <AnalysisBadge analysis={loan.analysis} />
+                  <TableCell className="text-sm text-muted-foreground">
+                    {loan.analysis}
                   </TableCell>
-                  <TableCell>
-                    <Button size="sm" className="gap-1.5 text-xs">
-                      {loan.action}
-                      <ArrowRight className="size-3" />
-                    </Button>
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <Button size="sm" className="text-xs w-[170px]">
+                        {loan.action}
+                      </Button>
+                      <Button variant="ghost" size="icon-xs">
+                        <Eye className="size-4 text-muted-foreground" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
