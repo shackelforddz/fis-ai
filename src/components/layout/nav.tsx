@@ -3,12 +3,9 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
-  Home,
   ListChecks,
   LayoutList,
   ClipboardList,
-  Users,
-  LineChart,
   Settings,
 } from "lucide-react";
 import {
@@ -19,12 +16,9 @@ import {
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { icon: Home, label: "Home", href: "/" },
   { icon: ListChecks, label: "Opportunities", href: "/opportunities" },
   { icon: LayoutList, label: "Risks", href: "/risks" },
   { icon: ClipboardList, label: "Loan Evaluation", href: "/loan-evaluation" },
-  { icon: Users, label: "Borrowers", href: "/borrowers" },
-  { icon: LineChart, label: "Data", href: "/data" },
 ];
 
 export function Nav({ className }: { className?: string }) {
