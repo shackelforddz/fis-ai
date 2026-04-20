@@ -21,6 +21,19 @@ function getMessageText(msg: { parts: ReadonlyArray<{ type: string; text?: strin
 }
 
 export function CopilotPanel({ className }: { className?: string }) {
+  return (
+    <aside className={`w-[360px] shrink-0 backdrop-blur-xl bg-glass rounded-xl overflow-hidden p-6 flex flex-col gap-4 h-full ${className ?? ""}`}>
+      <div className="shrink-0">
+        <h2 className="text-sm text-foreground">
+          Lenders Co-pilot
+        </h2>
+      </div>
+      <CopilotChat />
+    </aside>
+  );
+}
+
+export function CopilotChat() {
   const chat = useMemo(() => new Chat({ messages: [] }), []);
   const { messages, sendMessage, stop, status } = useChat({ chat });
   const [input, setInput] = useState("");
@@ -44,14 +57,7 @@ export function CopilotPanel({ className }: { className?: string }) {
   const hasMessages = messages.length > 0;
 
   return (
-    <aside className={`w-[360px] shrink-0 backdrop-blur-xl bg-glass rounded-xl overflow-hidden p-6 flex flex-col gap-4 h-full ${className ?? ""}`}>
-      {/* Header */}
-      <div className="shrink-0">
-        <h2 className="text-sm text-foreground">
-          Lenders Co-pilot
-        </h2>
-      </div>
-
+    <>
       {/* Chat Messages or Recommended Prompts */}
       <div className="flex-1 min-h-0 flex flex-col">
         {hasMessages ? (
@@ -140,6 +146,6 @@ export function CopilotPanel({ className }: { className?: string }) {
           </button>
         )}
       </div>
-    </aside>
+    </>
   );
 }
