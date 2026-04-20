@@ -6,13 +6,13 @@ import {
   ListChecks,
   LayoutList,
   ClipboardList,
-  Settings,
 } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -56,13 +56,16 @@ export function Nav({ className }: { className?: string }) {
         })}
       </div>
 
-      {/* Settings */}
+      {/* Avatar */}
       <Tooltip>
-        <TooltipTrigger className="flex items-center justify-center size-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors cursor-pointer">
-          <Settings className="size-5" />
+        <TooltipTrigger className="rounded-full cursor-pointer">
+          <Avatar className="size-12">
+            <AvatarImage src="https://i.pravatar.cc/96?img=12" alt="David Shackelford" />
+            <AvatarFallback>DS</AvatarFallback>
+          </Avatar>
         </TooltipTrigger>
         <TooltipContent side="right">
-          <p>Settings</p>
+          <p>Account</p>
         </TooltipContent>
       </Tooltip>
     </nav>
