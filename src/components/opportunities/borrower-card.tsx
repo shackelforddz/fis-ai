@@ -82,17 +82,13 @@ export function BorrowerCard({ borrower }: BorrowerCardProps) {
         </div>
 
         {/* Description */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
           <p className="text-base text-foreground leading-normal">
-            {borrower.suggestedProduct
-              ? `${borrower.suggestedProduct}`
-              : borrower.recommendedAction || ""}
+            {borrower.summary}
           </p>
-          <p className="text-sm text-muted-foreground opacity-70">
-            {borrower.signals[0]?.text}.{" "}
-            {borrower.suggestedProduct
-              ? `Eligible for ${borrower.suggestedProduct.toLowerCase()}.`
-              : borrower.recommendedAction || ""}
+          <p className="text-sm text-muted-foreground leading-normal">
+            Recommended next steps:{" "}
+            {borrower.nextSteps.map((s) => s.title).join(", ")}.
           </p>
         </div>
       </div>

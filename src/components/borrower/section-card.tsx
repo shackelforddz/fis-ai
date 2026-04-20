@@ -8,8 +8,8 @@ export function SectionCard({ title, subtitle, children }: SectionCardProps) {
   return (
     <div className="border border-border rounded-xl p-6">
       <div className="mb-4">
-        <h2 className="text-foreground">{title}</h2>
-        <p className="text-xs text-muted-foreground">{subtitle}</p>
+        <h2 className="text-2xl text-foreground">{title}</h2>
+        <p className="text-sm text-muted-foreground">{subtitle}</p>
       </div>
       {children}
     </div>

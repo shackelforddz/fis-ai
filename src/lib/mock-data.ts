@@ -22,9 +22,9 @@ import type {
 export const borrowers: Borrower[] = [
   {
     id: "bor-001",
-    name: "Apex Manufacturing Corp",
-    facilityId: "FAC-2024-0891",
-    opportunityScore: 92,
+    name: "Vanguard Logistics Ltd.",
+    facilityId: "TX-9928-BA",
+    opportunityScore: 94,
     opportunityTypes: ["Upsell Candidate"],
     signals: [
       { text: "Revenue up 34% YoY", strength: "Strong" },
@@ -37,8 +37,30 @@ export const borrowers: Borrower[] = [
     suggestedProduct: "Equipment financing line",
     estimatedUpsellRange: "$1.5M - $2.5M",
     confidenceScore: 87,
-    industry: "Manufacturing",
-    naicsCode: "332710",
+    industry: "Transportation & Warehousing",
+    naicsCode: "484110",
+    wowGrowthPct: 15,
+    creditLineExpansion: 500_000,
+    headcountGrowthPct: 12.4,
+    summary:
+      "Borrower shows consistent 15% WoW growth in servicing volumes. Eligible for credit line expansion up to $500k. Company showing 12.4% increase in headcount.",
+    nextSteps: [
+      {
+        title: "Automated Credit Memo",
+        description:
+          "A generated summary including the 15% WoW growth and 12.4% headcount data as the Justification for Increase.",
+      },
+      {
+        title: "Letter of Intent (LOI)",
+        description:
+          "A personalized offer letter for the $500k expansion, ready to be sent to the CFO.",
+      },
+      {
+        title: "Covenant Compliance Certificate",
+        description:
+          "A forward-looking document showing how the new debt fits within existing DSCR and leverage ratios.",
+      },
+    ],
   },
   {
     id: "bor-002",
@@ -62,6 +84,28 @@ export const borrowers: Borrower[] = [
     riskLevel: "Low",
     industry: "Transportation & Warehousing",
     naicsCode: "484110",
+    wowGrowthPct: 9,
+    creditLineExpansion: 350_000,
+    headcountGrowthPct: 6.8,
+    summary:
+      "DSO improved 18 days quarter-over-quarter while inventory expanded 22%. $3.2M ABL facility matures in Q3 2026 — ripe for term extension plus a $350k line increase.",
+    nextSteps: [
+      {
+        title: "Term Extension Proposal",
+        description:
+          "A 24-month extension of the $3.2M ABL facility with updated pricing tied to the improved DSO trajectory.",
+      },
+      {
+        title: "Line Increase Term Sheet",
+        description:
+          "A $350k line bump sized against the 22% inventory expansion and recent working-capital velocity.",
+      },
+      {
+        title: "Vendor Lien Review Memo",
+        description:
+          "A reconciliation of the newly filed vendor lien against collateral priority before issuing the amended facility.",
+      },
+    ],
   },
   {
     id: "bor-003",
@@ -82,6 +126,28 @@ export const borrowers: Borrower[] = [
     riskLevel: "Medium",
     industry: "Healthcare",
     naicsCode: "621111",
+    wowGrowthPct: 3,
+    creditLineExpansion: 150_000,
+    headcountGrowthPct: 2.1,
+    summary:
+      "DSCR compressed to 1.22x against a 1.20x covenant floor with DSO deteriorating 12 days. Healthcare staffing headwinds justify a covenant amendment before the Q2 2026 review.",
+    nextSteps: [
+      {
+        title: "Covenant Amendment Package",
+        description:
+          "A proposed one-quarter DSCR relief letter paired with a refreshed compliance forecast for the credit committee.",
+      },
+      {
+        title: "Collateral Revaluation Memo",
+        description:
+          "An updated appraisal summary of AR and equipment collateral to reinforce the amended borrowing base.",
+      },
+      {
+        title: "Workout Watchlist Entry",
+        description:
+          "An internal tracking document escalating the facility for bi-weekly DSCR and DSO monitoring.",
+      },
+    ],
   },
   {
     id: "bor-004",
@@ -101,6 +167,28 @@ export const borrowers: Borrower[] = [
     confidenceScore: 69,
     industry: "Wholesale Trade",
     naicsCode: "423510",
+    wowGrowthPct: 11,
+    creditLineExpansion: 400_000,
+    headcountGrowthPct: 7.5,
+    summary:
+      "AR volume jumped 28% versus prior quarter as new customers reduced top-debtor concentration. Line utilization at 62% leaves headroom — eligible for a $400k increase.",
+    nextSteps: [
+      {
+        title: "Line Increase Credit Memo",
+        description:
+          "A generated memo using the 28% AR lift and diversified debtor mix as justification for the $400k upsell.",
+      },
+      {
+        title: "Concentration Review Letter",
+        description:
+          "A borrower-ready summary showing concentration reduction and the resulting updated advance rates.",
+      },
+      {
+        title: "Relationship Pricing Sheet",
+        description:
+          "A tiered pricing proposal aligned with the expanded facility and projected utilization curve.",
+      },
+    ],
   },
   {
     id: "bor-005",
@@ -121,6 +209,28 @@ export const borrowers: Borrower[] = [
     riskLevel: "High",
     industry: "Information Technology",
     naicsCode: "541511",
+    wowGrowthPct: 2,
+    creditLineExpansion: 100_000,
+    headcountGrowthPct: 1.5,
+    summary:
+      "Top debtor concentration hit 28% — past the 20% cap — while payment behavior slowed and a new lawsuit was filed. Advance rate and concentration thresholds need to be reset.",
+    nextSteps: [
+      {
+        title: "Advance Rate Adjustment Letter",
+        description:
+          "A borrower notice stepping the advance rate down on the over-cap debtor and refreshing the borrowing base.",
+      },
+      {
+        title: "Concentration Cap Memo",
+        description:
+          "A credit memo recommending revised concentration thresholds grounded in the latest aging and payment trends.",
+      },
+      {
+        title: "Litigation Monitoring Brief",
+        description:
+          "A watchlist entry summarizing the pending lawsuit and its potential impact on the facility.",
+      },
+    ],
   },
   {
     id: "bor-006",
@@ -140,6 +250,28 @@ export const borrowers: Borrower[] = [
     confidenceScore: 62,
     industry: "Agriculture",
     naicsCode: "111100",
+    wowGrowthPct: 7,
+    creditLineExpansion: 250_000,
+    headcountGrowthPct: 4.2,
+    summary:
+      "Co-op maintains a 99% on-time payment rate with seasonal revenue acceleration ahead. A temporary $250k line increase covers the harvest window without structural changes.",
+    nextSteps: [
+      {
+        title: "Seasonal Line Increase Memo",
+        description:
+          "A right-sized $250k temporary uplift tied to the harvest revenue ramp and strong payment history.",
+      },
+      {
+        title: "Repayment Schedule Overlay",
+        description:
+          "A planned paydown schedule aligned with post-harvest cash flows to auto-retire the seasonal line.",
+      },
+      {
+        title: "Crop Insurance Certificate Request",
+        description:
+          "A borrower checklist item ensuring current crop insurance is on file before the advance is funded.",
+      },
+    ],
   },
 ];
 
@@ -434,14 +566,20 @@ export const riskEntries: RiskEntry[] = [
   {
     id: "risk-001",
     borrowerId: "bor-001",
-    borrowerName: "Apex Manufacturing Corp",
-    facilityId: "FAC-2024-001",
-    riskScore: 82,
-    recommendedAction: "Mitigate",
+    borrowerName: "Harbor Crew Holdings",
+    facilityId: "TX-9928-BA",
+    riskScore: 94,
+    recommendedAction: "Restructure",
     actionDescription:
-      "Send a 'Notice of Default' and a 30-day monitor on their operating account.",
-    warningType: "Liquidity & Payment Risk",
-    reasoning: "The borrower is 10 days late on taxes",
+      "The system flags a projected Debt Service Coverage Ratio (DSCR) drop below 1.15x for the next quarter. Fuel costs have risen 10%, but Harbor Crew's shipping surcharges haven't been updated in 90 days.",
+    warningType: "Credit & Structural Risk",
+    reasoning:
+      "Line utilization is near-maxed at 98% ($2.45M of $2.5M) with $620K drawn without PO coverage. SOFR forward curve crosses operational cash flow in August 2026.",
+    nextStep: {
+      title: "Restructuring Proposal",
+      description:
+        "Extend the maturity by 24 months and re-amortize the principal to a step-up structure (lower payments now, higher later).",
+    },
   },
   {
     id: "risk-002",
@@ -454,6 +592,11 @@ export const riskEntries: RiskEntry[] = [
       "Restructure 18-month '10 Period' in exchange for a 'Cross-Collateralization' on the borrower's other asset.",
     warningType: "Credit & Structural Risk",
     reasoning: "Current income cannot support a 1.25x DSCR.",
+    nextStep: {
+      title: "Cross-Collateralization Restructure",
+      description:
+        "Offer an 18-month extension in exchange for a cross-collateralization pledge on the borrower's secondary asset.",
+    },
   },
   {
     id: "risk-003",
@@ -467,6 +610,11 @@ export const riskEntries: RiskEntry[] = [
     warningType: "Asset & Market Risk",
     reasoning:
       "Based on current 6.5% market cap rates, the asset is valued at $18M—down from the $22M 'As-Stabilized' appraisal",
+    nextStep: {
+      title: "Principal Paydown Proposal",
+      description:
+        "Require a 15% principal paydown before granting the next extension to realign LTV with the updated appraisal.",
+    },
   },
   {
     id: "risk-004",
@@ -480,6 +628,11 @@ export const riskEntries: RiskEntry[] = [
     warningType: "Asset & Market Risk",
     reasoning:
       "The anchor tenant has left and the sub-market is in a permanent decline",
+    nextStep: {
+      title: "Secondary Market Sale",
+      description:
+        "Package the note for a mark-to-market sale to a secondary buyer at a 10% discount to exit before further sub-market decline.",
+    },
   },
   {
     id: "risk-005",
@@ -493,6 +646,11 @@ export const riskEntries: RiskEntry[] = [
     warningType: "Operational & Compliance Risk",
     reasoning:
       "A municipal violation (file #ENV-992) was issued to the property for 'Unsecured Chemical Storage.' This violates Section 8.2 of the Loan Agreement.",
+    nextStep: {
+      title: "Environmental Audit Trigger",
+      description:
+        "Invoke the right-to-inspect clause and trigger a borrower-funded environmental audit to resolve the Section 8.2 violation.",
+    },
   },
 ];
 
@@ -507,6 +665,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     action: "Create Credit Memo",
     submissionDate: "2026-03-15",
     assignedOfficer: "Sarah Martinez",
+    confidenceScore: 94,
   },
   {
     id: "loan-002",
@@ -518,6 +677,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     action: "Create Restructuring",
     submissionDate: "2026-03-12",
     assignedOfficer: "James Chen",
+    confidenceScore: 72,
   },
   {
     id: "loan-003",
@@ -529,6 +689,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     action: "Create Scenario",
     submissionDate: "2026-03-10",
     assignedOfficer: "Michael Rodriguez",
+    confidenceScore: 38,
   },
   {
     id: "loan-004",
@@ -540,6 +701,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     action: "Create Credit Memo",
     submissionDate: "2026-03-08",
     assignedOfficer: "Sarah Martinez",
+    confidenceScore: 88,
   },
   {
     id: "loan-005",
@@ -551,6 +713,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     action: "Create Scenario",
     submissionDate: "2026-03-05",
     assignedOfficer: "James Chen",
+    confidenceScore: 31,
   },
   {
     id: "loan-006",
@@ -562,6 +725,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     action: "Create Restructuring",
     submissionDate: "2026-03-01",
     assignedOfficer: "Michael Rodriguez",
+    confidenceScore: 65,
   },
   {
     id: "loan-007",
@@ -573,6 +737,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     action: "Create Scenario",
     submissionDate: "2026-02-28",
     assignedOfficer: "Sarah Martinez",
+    confidenceScore: 42,
   },
   {
     id: "loan-008",
@@ -584,6 +749,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     action: "Create Credit Memo",
     submissionDate: "2026-02-25",
     assignedOfficer: "James Chen",
+    confidenceScore: 91,
   },
   {
     id: "loan-009",
@@ -595,6 +761,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     action: "Create Scenario",
     submissionDate: "2026-02-20",
     assignedOfficer: "Michael Rodriguez",
+    confidenceScore: 27,
   },
   {
     id: "loan-010",
@@ -606,6 +773,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     action: "Create Restructuring",
     submissionDate: "2026-02-18",
     assignedOfficer: "Sarah Martinez",
+    confidenceScore: 69,
   },
   {
     id: "loan-011",
@@ -617,6 +785,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     action: "Create Credit Memo",
     submissionDate: "2026-02-15",
     assignedOfficer: "James Chen",
+    confidenceScore: 85,
   },
   {
     id: "loan-012",
@@ -628,5 +797,6 @@ export const loanEvaluations: LoanEvaluation[] = [
     action: "Create Restructuring",
     submissionDate: "2026-02-10",
     assignedOfficer: "Michael Rodriguez",
+    confidenceScore: 61,
   },
 ];

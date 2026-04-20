@@ -15,7 +15,7 @@ interface StatCardsRowProps {
 
 export function StatCardsRow({ cards }: StatCardsRowProps) {
   return (
-    <div className="flex items-center gap-0">
+    <div className="flex items-center gap-0 bg-gray-900 rounded-xl p-6">
       {cards.map((card, i) => (
         <div key={card.label} className="flex items-center flex-1">
           {i > 0 && <Separator orientation="vertical" className="h-16 mx-4" />}

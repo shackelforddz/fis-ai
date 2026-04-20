@@ -153,6 +153,7 @@ export default function LoanEvaluationPage() {
                 <TableHead>Type</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Analysis</TableHead>
+                <TableHead>Confidence Score</TableHead>
                 <TableHead className="text-right w-0">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -178,6 +179,9 @@ export default function LoanEvaluationPage() {
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {loan.analysis}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {loan.confidenceScore}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">

@@ -69,14 +69,14 @@ export function RiskCard({ risk }: RiskCardProps) {
         </div>
 
         {/* Action Description */}
-        <p className="text-base text-foreground leading-normal">
-          {risk.actionDescription}
-        </p>
-
-        {/* Reasoning */}
-        <p className="text-sm text-muted-foreground leading-normal">
-          {risk.reasoning}
-        </p>
+        <div className="flex flex-col gap-2">
+          <p className="text-base text-foreground leading-normal">
+            {risk.actionDescription}
+          </p>
+          <p className="text-sm text-muted-foreground leading-normal">
+            Recommended next step: {risk.nextStep.title}.
+          </p>
+        </div>
       </div>
 
       {/* Arrow */}

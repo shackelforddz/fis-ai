@@ -21,6 +21,11 @@ export type RecommendedActionType =
   | "Recapitalize"
   | "Sell";
 
+export interface NextStep {
+  title: string;
+  description: string;
+}
+
 export interface RiskEntry {
   id: string;
   borrowerId: string;
@@ -31,6 +36,7 @@ export interface RiskEntry {
   actionDescription: string;
   warningType: WarningType;
   reasoning: string;
+  nextStep: NextStep;
 }
 export type Trend = "improving" | "stable" | "declining";
 export type CovenantStatus =
@@ -83,6 +89,11 @@ export interface Borrower {
   riskLevel?: RiskLevel;
   industry?: string;
   naicsCode?: string;
+  wowGrowthPct: number;
+  creditLineExpansion: number;
+  headcountGrowthPct: number;
+  summary: string;
+  nextSteps: NextStep[];
 }
 
 export interface GrowthSignal {
@@ -241,4 +252,5 @@ export interface LoanEvaluation {
   action: LoanActionType;
   submissionDate: string;
   assignedOfficer: string;
+  confidenceScore: number;
 }
