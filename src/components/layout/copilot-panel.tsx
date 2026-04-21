@@ -35,7 +35,9 @@ export function CopilotPanel({ className }: { className?: string }) {
 
 export function CopilotChat() {
   const chat = useMemo(() => new Chat({ messages: [] }), []);
-  const { messages, sendMessage, stop, status } = useChat({ chat });
+  const { messages, sendMessage, stop, status, error, clearError } = useChat({
+    chat,
+  });
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -109,6 +111,22 @@ export function CopilotChat() {
           </div>
         )}
       </div>
+
+      {/* Error banner */}
+      {error && (
+        <div className="shrink-0 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive flex items-start gap-2">
+          <span className="flex-1 leading-relaxed">
+            {error.message || "Something went wrong. Check the server logs."}
+          </span>
+          <button
+            type="button"
+            onClick={() => clearError()}
+            className="text-destructive/70 hover:text-destructive shrink-0"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {/* Chat Input */}
       <div className="bg-card rounded-full flex items-center gap-2 px-6 py-4 shrink-0">
