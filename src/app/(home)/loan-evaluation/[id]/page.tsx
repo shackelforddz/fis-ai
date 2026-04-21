@@ -355,7 +355,12 @@ export default function LoanDetailPage({
             <h2 className="text-2xl text-foreground">Scenario Analysis</h2>
             <p className="text-xs text-muted-foreground">Real-time Indicators</p>
           </div>
-          <Button variant="outline">New Analysis</Button>
+          <Button
+            variant="outline"
+            render={<Link href={`/scenarios?borrower=${loan.id}`} />}
+          >
+            New Analysis
+          </Button>
         </div>
         <Table>
           <TableHeader>

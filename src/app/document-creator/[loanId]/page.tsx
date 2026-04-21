@@ -9,6 +9,7 @@ import {
   MouseEvent as ReactMouseEvent,
   Suspense,
 } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
@@ -271,6 +272,36 @@ function ToolbarDivider() {
   return <span className="w-px h-5 bg-border mx-1" />;
 }
 
+type InsertedVisual = {
+  instanceId: string;
+  visualId: VisualId;
+  element: HTMLElement;
+};
+
+function computeDropInsertion(docRoot: HTMLElement, clientY: number) {
+  const children = Array.from(docRoot.children).filter(
+    (el) => !(el as HTMLElement).dataset.indicator,
+  ) as HTMLElement[];
+
+  if (children.length === 0) {
+    return { before: null as HTMLElement | null, top: 8 };
+  }
+
+  for (let i = 0; i < children.length; i++) {
+    const rect = children[i].getBoundingClientRect();
+    const mid = rect.top + rect.height / 2;
+    if (clientY < mid) {
+      const cur = children[i];
+      const prev = i === 0 ? null : children[i - 1];
+      const prevBottom = prev ? prev.offsetTop + prev.offsetHeight : 0;
+      const top = (prevBottom + cur.offsetTop) / 2;
+      return { before: cur, top };
+    }
+  }
+  const last = children[children.length - 1];
+  return { before: null, top: last.offsetTop + last.offsetHeight + 12 };
+}
+
 export default function DocumentCreatorPage({
   params,
 }: {
@@ -295,8 +326,10 @@ function DocumentCreator({ loanId }: { loanId: string }) {
   );
 
   const [activeTab, setActiveTab] = useState<"copilot" | "library">("library");
-  const [insertedVisuals, setInsertedVisuals] = useState<VisualId[]>([]);
+  const [insertedVisuals, setInsertedVisuals] = useState<InsertedVisual[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [indicatorTop, setIndicatorTop] = useState<number | null>(null);
+  const docRef = useRef<HTMLDivElement>(null);
 
   const [toolbar, setToolbar] = useState({
     bold: false,
@@ -374,26 +407,53 @@ function DocumentCreator({ loanId }: { loanId: string }) {
   }
 
   function handleDragOver(e: DragEvent<HTMLDivElement>) {
+    if (!e.dataTransfer.types.includes("text/visual-id")) return;
     e.preventDefault();
     e.dataTransfer.dropEffect = "copy";
     setIsDragOver(true);
+    const docRoot = docRef.current;
+    if (!docRoot) return;
+    const { top } = computeDropInsertion(docRoot, e.clientY);
+    setIndicatorTop(top);
   }
 
-  function handleDragLeave() {
+  function handleDragLeave(e: DragEvent<HTMLDivElement>) {
+    const related = e.relatedTarget as globalThis.Node | null;
+    if (related && docRef.current?.contains(related)) return;
     setIsDragOver(false);
+    setIndicatorTop(null);
   }
 
   function handleDrop(e: DragEvent<HTMLDivElement>) {
+    const visualId = e.dataTransfer.getData("text/visual-id") as VisualId;
+    if (!visualId || !LIBRARY_VISUALS.some((v) => v.id === visualId)) return;
     e.preventDefault();
     setIsDragOver(false);
-    const id = e.dataTransfer.getData("text/visual-id") as VisualId;
-    if (id && LIBRARY_VISUALS.some((v) => v.id === id)) {
-      setInsertedVisuals((prev) => [...prev, id]);
+    setIndicatorTop(null);
+
+    const docRoot = docRef.current;
+    if (!docRoot) return;
+    const { before } = computeDropInsertion(docRoot, e.clientY);
+
+    const instanceId = `v-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    const slot = document.createElement("div");
+    slot.setAttribute("data-visual-slot", instanceId);
+
+    if (before) {
+      docRoot.insertBefore(slot, before);
+    } else {
+      docRoot.appendChild(slot);
     }
+
+    setInsertedVisuals((prev) => [...prev, { instanceId, visualId, element: slot }]);
   }
 
-  function removeVisual(index: number) {
-    setInsertedVisuals((prev) => prev.filter((_, i) => i !== index));
+  function removeVisual(instanceId: string) {
+    setInsertedVisuals((prev) => {
+      const found = prev.find((v) => v.instanceId === instanceId);
+      if (found) found.element.remove();
+      return prev.filter((v) => v.instanceId !== instanceId);
+    });
   }
 
   const documentTitle = `${loan.borrowerName} ${template.titleSuffix}`;
@@ -597,7 +657,8 @@ function DocumentCreator({ loanId }: { loanId: string }) {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`doc-preview bg-white rounded-xl p-10 flex flex-col gap-6 text-gray-900 transition-colors ${
+          ref={docRef}
+          className={`doc-preview relative bg-white rounded-xl p-10 flex flex-col gap-6 text-gray-900 transition-colors ${
             isDragOver ? "ring-2 ring-primary" : ""
           }`}
         >
@@ -617,34 +678,6 @@ function DocumentCreator({ loanId }: { loanId: string }) {
             borrower={borrower}
           />
 
-          {/* Inserted library visuals */}
-          {insertedVisuals.map((id, i) => {
-            const meta = LIBRARY_VISUALS.find((v) => v.id === id);
-            if (!meta) return null;
-            return (
-              <section key={`${id}-${i}`} className="flex flex-col gap-3 group relative">
-                <div className="flex items-center justify-between border-b border-gray-200 pb-2">
-                  <EditableBlock
-                    as="h3"
-                    initialHtml={meta.title}
-                    className="text-base font-bold flex-1"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeVisual(i)}
-                    className="opacity-0 group-hover:opacity-100 size-6 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-opacity"
-                  >
-                    <X className="size-4" />
-                  </button>
-                </div>
-                <div className="h-[220px]">
-                  <VisualPreview id={id} size="md" variant="document" />
-                </div>
-                <DocStatRow items={meta.stats} />
-              </section>
-            );
-          })}
-
           {/* Trailing editable area */}
           <EditableBlock
             as="div"
@@ -652,7 +685,43 @@ function DocumentCreator({ loanId }: { loanId: string }) {
             placeholder="Start typing to add more content, or drag a visual from the Library…"
             className="text-sm leading-relaxed min-h-[60px]"
           />
+
+          {indicatorTop !== null && (
+            <div
+              data-indicator="true"
+              className="absolute left-10 right-10 h-1 bg-primary rounded-full pointer-events-none shadow-[0_0_0_4px_rgba(75,205,62,0.25)]"
+              style={{ top: `${indicatorTop - 2}px` }}
+            />
+          )}
         </div>
+        {insertedVisuals.map((v) => {
+          const meta = LIBRARY_VISUALS.find((x) => x.id === v.visualId);
+          if (!meta) return null;
+          return createPortal(
+            <section className="flex flex-col gap-3 group relative">
+              <div className="flex items-center justify-between border-b border-gray-200 pb-2">
+                <EditableBlock
+                  as="h3"
+                  initialHtml={meta.title}
+                  className="text-base font-bold flex-1"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeVisual(v.instanceId)}
+                  className="opacity-0 group-hover:opacity-100 size-6 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-opacity"
+                >
+                  <X className="size-4" />
+                </button>
+              </div>
+              <div className="h-[220px]">
+                <VisualPreview id={v.visualId} size="md" variant="document" />
+              </div>
+              <DocStatRow items={meta.stats} />
+            </section>,
+            v.element,
+            v.instanceId,
+          );
+        })}
       </main>
 
       {/* Right Panel — Copilot / Library */}

@@ -185,10 +185,38 @@ export default function LoanEvaluationPage() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <Button size="sm" className="text-xs w-[170px]">
-                        {loan.action}
-                      </Button>
-                      <Button variant="ghost" size="icon-xs">
+                      {loan.action === "Create Scenario" ? (
+                        <Button
+                          size="sm"
+                          className="text-xs w-[170px]"
+                          render={
+                            <Link href={`/scenarios?borrower=${loan.id}`} />
+                          }
+                        >
+                          {loan.action}
+                        </Button>
+                      ) : loan.action === "Create Credit Memo" ? (
+                        <Button
+                          size="sm"
+                          className="text-xs w-[170px]"
+                          render={
+                            <Link
+                              href={`/document-creator/${loan.id}?template=credit-memo`}
+                            />
+                          }
+                        >
+                          {loan.action}
+                        </Button>
+                      ) : (
+                        <Button size="sm" className="text-xs w-[170px]">
+                          {loan.action}
+                        </Button>
+                      )}
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
+                        render={<Link href={`/loan-evaluation/${loan.id}`} />}
+                      >
                         <Eye className="size-4 text-muted-foreground" />
                       </Button>
                     </div>
