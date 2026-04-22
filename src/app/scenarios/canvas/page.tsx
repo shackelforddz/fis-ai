@@ -48,6 +48,7 @@ import {
   useEdgesState,
   useReactFlow,
   useStore,
+  useStoreApi,
   Handle,
   Position,
   type Node,
@@ -1043,20 +1044,27 @@ function CanvasBoard() {
   const [handMode, setHandMode] = useState(false);
   const [viewingNodeId, setViewingNodeId] = useState<string | null>(null);
   const reconnectSuccessful = useRef(true);
-  const { screenToFlowPosition, fitView } = useReactFlow();
+  const { screenToFlowPosition, fitView, setCenter } = useReactFlow();
+  const store = useStoreApi();
   const { editMode, setEditMode } = useContext(DocEditContext);
 
   useEffect(() => {
     if (editMode) {
-      fitView({
-        nodes: [{ id: "doc" }],
-        padding: 0.08,
-        duration: 600,
-      });
+      const { width, height } = store.getState();
+      const horizontalPad = 24;
+      const topPad = 32;
+      const docWidth = 860;
+      const zoom = Math.max(
+        0.4,
+        Math.min(1.5, (width - horizontalPad * 2) / docWidth),
+      );
+      const docCenterX = 680 + docWidth / 2;
+      const centerY = (height / 2 - topPad) / zoom;
+      setCenter(docCenterX, centerY, { zoom, duration: 600 });
     } else {
       fitView({ padding: 0.15, duration: 600 });
     }
-  }, [editMode, fitView]);
+  }, [editMode, fitView, setCenter, store]);
 
   const onView = useCallback((nodeId: string) => setViewingNodeId(nodeId), []);
 
