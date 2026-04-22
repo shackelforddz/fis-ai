@@ -89,11 +89,9 @@ function StatRow({ items }: { items: StatItem[] }) {
           <span
             className={cn(
               "text-3xl font-semibold",
-              item.valueTone === "destructive"
-                ? "text-[#EB1F32]"
-                : item.valueTone === "primary"
-                  ? "text-primary"
-                  : "text-foreground"
+              item.valueTone === "primary"
+                ? "text-primary"
+                : "text-foreground"
             )}
           >
             {item.value}
