@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { SectionCard } from "@/components/borrower/section-card";
+import { AnimateInView } from "@/components/ui/animate-in-view";
 import { loanEvaluations } from "@/lib/mock-data";
 import {
   performanceData,
@@ -398,7 +399,7 @@ export default function LoanDetailPage({
 
       {/* Performance Analysis */}
       <SectionCard title="Performance Analysis" subtitle="Real-time Indicators">
-        <div className="h-[400px] w-full mb-6 rounded-xl p-6 bg-gray-900">
+        <AnimateInView className="h-[400px] w-full mb-6 rounded-xl p-6 bg-gray-900">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={performanceData}>
               <CartesianGrid
@@ -433,13 +434,13 @@ export default function LoanDetailPage({
               />
             </LineChart>
           </ResponsiveContainer>
-        </div>
+        </AnimateInView>
         <StatRow items={performanceStats} />
       </SectionCard>
 
       {/* ERP Data */}
       <SectionCard title="ERP Data" subtitle="Real-time Indicators">
-        <div className="h-[400px] w-full mb-6 rounded-xl p-6 bg-gray-900">
+        <AnimateInView className="h-[400px] w-full mb-6 rounded-xl p-6 bg-gray-900">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={erpData}>
               <CartesianGrid
@@ -474,13 +475,13 @@ export default function LoanDetailPage({
               />
             </LineChart>
           </ResponsiveContainer>
-        </div>
+        </AnimateInView>
         <StatRow items={erpStats} />
       </SectionCard>
 
       {/* Credit Bureau Data */}
       <SectionCard title="Credit Bureau Data" subtitle="Real-time Indicators">
-        <div className="grid grid-cols-2 gap-8 mb-6">
+        <AnimateInView className="grid grid-cols-2 gap-8 mb-6">
           <div className="rounded-xl p-6 bg-gray-900">
             <DonutChart
               score={experianScore}
@@ -495,7 +496,7 @@ export default function LoanDetailPage({
               label="Personal Guarantor (FICO)"
             />
           </div>
-        </div>
+        </AnimateInView>
         <StatRow items={[...experianStats, ...ficoStats]} />
       </SectionCard>
     </div>

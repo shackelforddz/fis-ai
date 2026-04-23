@@ -73,7 +73,7 @@ export function CopilotChat() {
                   className={
                     msg.role === "user"
                       ? "self-end bg-secondary rounded-2xl rounded-br-sm px-4 py-2.5 max-w-[85%]"
-                      : "self-start bg-card border border-border rounded-2xl rounded-bl-sm px-4 py-2.5 max-w-[85%]"
+                      : "self-start bg-card rounded-2xl rounded-bl-sm px-4 py-2.5 max-w-[85%]"
                   }
                 >
                   <p className="text-sm text-foreground whitespace-pre-line leading-relaxed">
@@ -83,7 +83,7 @@ export function CopilotChat() {
               );
             })}
             {status === "submitted" && (
-              <div className="self-start bg-card border border-border rounded-2xl rounded-bl-sm px-4 py-3 max-w-[85%]">
+              <div className="self-start bg-card rounded-2xl rounded-bl-sm px-4 py-3 max-w-[85%]">
                 <div className="flex gap-1.5 items-center">
                   <span className="size-1.5 rounded-full bg-muted-foreground animate-bounce [animation-delay:0ms]" />
                   <span className="size-1.5 rounded-full bg-muted-foreground animate-bounce [animation-delay:150ms]" />

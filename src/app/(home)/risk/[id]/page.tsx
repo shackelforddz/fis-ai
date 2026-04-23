@@ -36,6 +36,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { SectionCard } from "@/components/borrower/section-card";
+import { AnimateInView } from "@/components/ui/animate-in-view";
 import { cn } from "@/lib/utils";
 import { riskEntries } from "@/lib/mock-data";
 
@@ -305,7 +306,15 @@ export default function BorrowerRiskDetailPage({
                 {risk.nextStep.description}
               </p>
             </div>
-            <Button variant="secondary" className="shrink-0 w-[152px]">
+            <Button
+              variant="secondary"
+              className="shrink-0 w-[152px]"
+              render={
+                <Link
+                  href={`/document-creator/${risk.borrowerId}?template=credit-memo`}
+                />
+              }
+            >
               Generate Document
             </Button>
           </div>
@@ -386,7 +395,7 @@ export default function BorrowerRiskDetailPage({
           title="Liquidity Erosion"
           subtitle="DSO velocity & spend rate"
         >
-          <div className="min-h-[320px] w-full mb-6 bg-gray-900 rounded-xl p-6">
+          <AnimateInView className="min-h-[320px] w-full mb-6 bg-gray-900 rounded-xl p-6">
             <ResponsiveContainer width="100%" height={320}>
               <LineChart data={dsoSeries}>
                 <CartesianGrid stroke={CHART_GRID} strokeDasharray="3 3" />
@@ -431,7 +440,7 @@ export default function BorrowerRiskDetailPage({
                 />
               </LineChart>
             </ResponsiveContainer>
-          </div>
+          </AnimateInView>
           <StatRow
             items={[
               {
@@ -461,7 +470,7 @@ export default function BorrowerRiskDetailPage({
           title="Utilization Spikes"
           subtitle="revolving line vs. purchase order coverage"
         >
-          <div className="min-h-[320px] w-full mb-6 bg-gray-900 rounded-xl p-6">
+          <AnimateInView className="min-h-[320px] w-full mb-6 bg-gray-900 rounded-xl p-6">
             <ResponsiveContainer width="100%" height={320}>
               <LineChart data={utilizationSeries}>
                 <CartesianGrid stroke={CHART_GRID} strokeDasharray="3 3" />
@@ -503,7 +512,7 @@ export default function BorrowerRiskDetailPage({
                 />
               </LineChart>
             </ResponsiveContainer>
-          </div>
+          </AnimateInView>
           <StatRow
             items={[
               {
@@ -533,7 +542,7 @@ export default function BorrowerRiskDetailPage({
           title="SOFR Forward Curve"
           subtitle="the exact month interest expense will outpace operational cash flow."
         >
-          <div className="min-h-[320px] w-full mb-6 bg-gray-900 rounded-xl p-6">
+          <AnimateInView className="min-h-[320px] w-full mb-6 bg-gray-900 rounded-xl p-6">
             <ResponsiveContainer width="100%" height={320}>
               <LineChart data={sofrSeries}>
                 <CartesianGrid stroke={CHART_GRID} strokeDasharray="3 3" />
@@ -563,7 +572,7 @@ export default function BorrowerRiskDetailPage({
                 />
               </LineChart>
             </ResponsiveContainer>
-          </div>
+          </AnimateInView>
           <StatRow
             items={[
               {
@@ -593,7 +602,7 @@ export default function BorrowerRiskDetailPage({
           title="Industry Benchmarks"
           subtitle="Real-time data showing a decline in maritime shipping volumes or port efficiency scores globally"
         >
-          <div className="min-h-[320px] w-full mb-6 bg-gray-900 rounded-xl p-6">
+          <AnimateInView className="min-h-[320px] w-full mb-6 bg-gray-900 rounded-xl p-6">
             <ResponsiveContainer width="100%" height={320}>
               <BarChart data={industrySeries}>
                 <CartesianGrid stroke={CHART_GRID} strokeDasharray="3 3" />
@@ -615,7 +624,7 @@ export default function BorrowerRiskDetailPage({
                 />
               </BarChart>
             </ResponsiveContainer>
-          </div>
+          </AnimateInView>
           <StatRow
             items={[
               {

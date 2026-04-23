@@ -42,6 +42,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { SectionCard } from "@/components/borrower/section-card";
+import { AnimateInView } from "@/components/ui/animate-in-view";
 import { cn } from "@/lib/utils";
 import { borrowers, covenants } from "@/lib/mock-data";
 
@@ -321,7 +322,15 @@ export default function BorrowerDetailPage({
                     {step.description}
                   </p>
                 </div>
-                <Button variant="secondary" className="shrink-0 w-[152px]">
+                <Button
+                  variant="secondary"
+                  className="shrink-0 w-[152px]"
+                  render={
+                    <Link
+                      href={`/document-creator/${borrower.id}?template=credit-memo`}
+                    />
+                  }
+                >
                   Generate Document
                 </Button>
               </div>
@@ -449,7 +458,7 @@ export default function BorrowerDetailPage({
         title="Operating Account Buffers"
         subtitle={`While revenue is up ${borrower.wowGrowthPct}%, the system sees that their Daily Ending Balance is trending lower.`}
       >
-        <div className="h-[400px] w-full mb-6 bg-gray-900 rounded-xl p-6">
+        <AnimateInView className="h-[400px] w-full mb-6 bg-gray-900 rounded-xl p-6">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={operatingBufferSeries}>
               <CartesianGrid stroke={CHART_GRID} strokeDasharray="3 3" />
@@ -466,7 +475,7 @@ export default function BorrowerDetailPage({
               />
             </LineChart>
           </ResponsiveContainer>
-        </div>
+        </AnimateInView>
         <StatRow
           items={[
             {
@@ -496,7 +505,7 @@ export default function BorrowerDetailPage({
         title="Payment Flow Analysis"
         subtitle="The system monitors incoming ACH and wire volumes. It detected a sustained 'step-up' in transaction count, not just a one-time large payment."
       >
-        <div className="h-[400px] w-full mb-6 bg-gray-900 rounded-xl p-6">
+        <AnimateInView className="h-[400px] w-full mb-6 bg-gray-900 rounded-xl p-6">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={paymentFlowSeries}>
               <CartesianGrid stroke={CHART_GRID} strokeDasharray="3 3" />
@@ -507,7 +516,7 @@ export default function BorrowerDetailPage({
               <Bar dataKey="wire" name="Wire ($k)" fill={CHART_GREEN_DARK} radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-        </div>
+        </AnimateInView>
         <StatRow
           items={[
             { label: "6-mo ACH volume", value: "$8.44M", sublabel: "vs $6.1M prior 6-mo", trend: "up" },
@@ -527,7 +536,7 @@ export default function BorrowerDetailPage({
         title="Professional Network Scanning"
         subtitle={`Automated scrapers (like LinkedIn or Indeed) detected 18 new job postings and 12 new employee "joins" in the last 45 days.`}
       >
-        <div className="h-[400px] w-full mb-6 bg-gray-900 rounded-xl p-6">
+        <AnimateInView className="h-[400px] w-full mb-6 bg-gray-900 rounded-xl p-6">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={networkScanSeries}>
               <CartesianGrid stroke={CHART_GRID} strokeDasharray="3 3" />
@@ -538,7 +547,7 @@ export default function BorrowerDetailPage({
               <Bar dataKey="joins" name="New joins" fill={CHART_GREEN_DARK} radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-        </div>
+        </AnimateInView>
         <StatRow
           items={[
             { label: "New job postings", value: "18", sublabel: "Up from 3 (6 mo ago)", trend: "up" },
@@ -558,7 +567,7 @@ export default function BorrowerDetailPage({
         title="Job Function Breakdown"
         subtitle="Most new hires are in Operations and Fleet Management."
       >
-        <div className="h-[320px] w-full mb-6 bg-gray-900 rounded-xl p-6">
+        <AnimateInView className="h-[320px] w-full mb-6 bg-gray-900 rounded-xl p-6">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -577,7 +586,7 @@ export default function BorrowerDetailPage({
               <RechartsTooltip contentStyle={tooltipStyle} />
             </PieChart>
           </ResponsiveContainer>
-        </div>
+        </AnimateInView>
         <StatRow
           items={[
             { label: "Operations", value: "45%", sublabel: "8 new hires" },
@@ -593,7 +602,7 @@ export default function BorrowerDetailPage({
         title="Debt service coverage ratio (DSCR)"
         subtitle={`The latest P&L — trailing 12 months for ${borrower.name}`}
       >
-        <div className="h-[400px] w-full mb-6 bg-gray-900 rounded-xl p-6">
+        <AnimateInView className="h-[400px] w-full mb-6 bg-gray-900 rounded-xl p-6">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={dscrSeries}>
               <CartesianGrid stroke={CHART_GRID} strokeDasharray="3 3" />
@@ -610,7 +619,7 @@ export default function BorrowerDetailPage({
               />
             </LineChart>
           </ResponsiveContainer>
-        </div>
+        </AnimateInView>
         <StatRow
           items={[
             { label: "DSCR", value: "1.42x", sublabel: "Min covenant: 1.20x", trend: "up" },
@@ -630,7 +639,7 @@ export default function BorrowerDetailPage({
         title="Servicing Signals"
         subtitle="Health & Operational Metrics"
       >
-        <div className="h-[400px] w-full mb-6 bg-gray-900 rounded-xl p-6">
+        <AnimateInView className="h-[400px] w-full mb-6 bg-gray-900 rounded-xl p-6">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={servicingSeries}>
               <CartesianGrid stroke={CHART_GRID} strokeDasharray="3 3" />
@@ -645,7 +654,7 @@ export default function BorrowerDetailPage({
               />
             </BarChart>
           </ResponsiveContainer>
-        </div>
+        </AnimateInView>
         <StatRow
           items={[
             { label: "On-time payment rate", value: "97.2%", sublabel: "+1.8 pts YoY", trend: "up" },
@@ -665,7 +674,7 @@ export default function BorrowerDetailPage({
         title="Market Data"
         subtitle="Health & Operational Metrics"
       >
-        <div className="h-[400px] w-full mb-6 bg-gray-900 rounded-xl p-6">
+        <AnimateInView className="h-[400px] w-full mb-6 bg-gray-900 rounded-xl p-6">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={marketSeries}>
               <CartesianGrid stroke={CHART_GRID} strokeDasharray="3 3" />
@@ -682,7 +691,7 @@ export default function BorrowerDetailPage({
               />
             </LineChart>
           </ResponsiveContainer>
-        </div>
+        </AnimateInView>
         <StatRow
           items={[
             {
