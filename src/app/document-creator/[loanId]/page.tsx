@@ -43,6 +43,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { CopilotChat } from "@/components/layout/copilot-panel";
+import { cn } from "@/lib/utils";
 import { loanEvaluations, borrowers } from "@/lib/mock-data";
 import {
   performanceData,
@@ -172,11 +173,11 @@ function DonutScore({
       </ResponsiveContainer>
       <div className="absolute inset-0 flex items-center justify-center">
         <span
-          className={
-            size === "sm"
-              ? "text-lg font-bold text-foreground"
-              : "text-4xl font-bold text-foreground"
-          }
+          className={cn(
+            "font-bold",
+            size === "sm" ? "text-lg" : "text-4xl",
+            variant === "document" ? "text-gray-900" : "text-foreground",
+          )}
         >
           {score}
         </span>
