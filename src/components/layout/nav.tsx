@@ -60,7 +60,7 @@ export function Nav({ className }: { className?: string }) {
       <Tooltip>
         <TooltipTrigger className="rounded-full cursor-pointer">
           <Avatar className="size-12">
-            <AvatarImage src="https://i.pravatar.cc/96?img=12" alt="David Shackelford" />
+            <AvatarImage src="/avatar.jpg" alt="David Shackelford" />
             <AvatarFallback>DS</AvatarFallback>
           </Avatar>
         </TooltipTrigger>
