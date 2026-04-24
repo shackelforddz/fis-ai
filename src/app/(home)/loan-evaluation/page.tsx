@@ -195,12 +195,28 @@ export default function LoanEvaluationPage() {
                         >
                           {loan.action}
                         </Button>
+                      ) : loan.action === "Create Credit Memo" ? (
+                        <Button
+                          size="sm"
+                          className="text-xs w-[170px]"
+                          render={
+                            <Link
+                              href={`/document-creator/${loan.id}?template=credit-memo`}
+                            />
+                          }
+                        >
+                          {loan.action}
+                        </Button>
                       ) : (
                         <Button size="sm" className="text-xs w-[170px]">
                           {loan.action}
                         </Button>
                       )}
-                      <Button variant="ghost" size="icon-xs">
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
+                        render={<Link href={`/loan-evaluation/${loan.id}`} />}
+                      >
                         <Eye className="size-4 text-muted-foreground" />
                       </Button>
                     </div>
