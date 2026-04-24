@@ -917,18 +917,18 @@ export const ficoStats: Stat[] = [
 // Borrower detail
 
 export const operatingBufferSeries = [
-  { month: "May", balance: 820 },
-  { month: "Jun", balance: 790 },
-  { month: "Jul", balance: 760 },
-  { month: "Aug", balance: 740 },
-  { month: "Sep", balance: 715 },
-  { month: "Oct", balance: 690 },
-  { month: "Nov", balance: 665 },
-  { month: "Dec", balance: 640 },
-  { month: "Jan", balance: 615 },
-  { month: "Feb", balance: 590 },
-  { month: "Mar", balance: 570 },
-  { month: "Apr", balance: 555 },
+  { month: "May", balance: 820, payables: 310 },
+  { month: "Jun", balance: 790, payables: 335 },
+  { month: "Jul", balance: 760, payables: 355 },
+  { month: "Aug", balance: 740, payables: 380 },
+  { month: "Sep", balance: 715, payables: 405 },
+  { month: "Oct", balance: 690, payables: 430 },
+  { month: "Nov", balance: 665, payables: 455 },
+  { month: "Dec", balance: 640, payables: 480 },
+  { month: "Jan", balance: 615, payables: 505 },
+  { month: "Feb", balance: 590, payables: 525 },
+  { month: "Mar", balance: 570, payables: 545 },
+  { month: "Apr", balance: 555, payables: 560 },
 ];
 
 export const paymentFlowSeries = [

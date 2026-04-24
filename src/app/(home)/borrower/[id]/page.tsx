@@ -20,9 +20,11 @@ import {
   LineChart,
   Pie,
   PieChart,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip as RechartsTooltip,
   XAxis,
+  YAxis,
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -407,13 +409,34 @@ export default function BorrowerDetailPage({
             <LineChart data={operatingBufferSeries}>
               <CartesianGrid stroke={CHART_GRID} strokeDasharray="3 3" />
               <XAxis dataKey="month" stroke={CHART_MUTED} fontSize={12} tickLine={false} />
+              <YAxis hide domain={[300, "auto"]} />
               <RechartsTooltip contentStyle={tooltipStyle} />
               <Legend wrapperStyle={{ color: "#ffffff", fontSize: 12 }} />
+              <ReferenceLine
+                y={400}
+                stroke={CHART_MUTED}
+                strokeDasharray="4 4"
+                strokeOpacity={0.8}
+                label={{
+                  value: "Minimum liquidity ($400k)",
+                  position: "insideBottomRight",
+                  fill: CHART_MUTED,
+                  fontSize: 11,
+                }}
+              />
               <Line
                 type="monotone"
                 dataKey="balance"
                 name="Daily ending balance ($k)"
                 stroke={CHART_GREEN}
+                strokeWidth={2}
+                dot={false}
+              />
+              <Line
+                type="monotone"
+                dataKey="payables"
+                name="Monthly payables / opex ($k)"
+                stroke="#166534"
                 strokeWidth={2}
                 dot={false}
               />

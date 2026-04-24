@@ -47,6 +47,7 @@ import { cn } from "@/lib/utils";
 import {
   loanEvaluations,
   borrowers,
+  riskEntries,
   performanceData,
   erpData,
   experianScore,
@@ -322,10 +323,31 @@ function DocumentCreator({ loanId }: { loanId: string }) {
   const templateKey = (searchParams.get("template") as TemplateKey) || "credit-memo";
   const template = TEMPLATES[templateKey] ?? TEMPLATES["credit-memo"];
 
-  const loan = loanEvaluations.find((l) => l.id === loanId) ?? loanEvaluations[0];
-  const borrower = borrowers.find((b) =>
-    b.name.toLowerCase().includes(loan.borrowerName.toLowerCase().split(" ")[0])
-  );
+  // loanId can be a loan id ("loan-XXX") or a borrower id ("bor-XXX").
+  // Risk-driven flows pass a borrower id; the risk entry may use a different
+  // borrowerName than the borrowers list, so prefer the risk entry's name.
+  const directLoan = loanEvaluations.find((l) => l.id === loanId);
+  const riskEntry = !directLoan
+    ? riskEntries.find((r) => r.borrowerId === loanId)
+    : undefined;
+  const borrowerRecord = !directLoan
+    ? borrowers.find((b) => b.id === loanId)
+    : undefined;
+  const resolvedName =
+    directLoan?.borrowerName ??
+    riskEntry?.borrowerName ??
+    borrowerRecord?.name ??
+    loanEvaluations[0].borrowerName;
+  const loan = directLoan ?? {
+    ...loanEvaluations[0],
+    id: loanId,
+    borrowerName: resolvedName,
+  };
+  const borrower =
+    borrowerRecord ??
+    borrowers.find((b) =>
+      b.name.toLowerCase().includes(resolvedName.toLowerCase().split(" ")[0]),
+    );
 
   const [activeTab, setActiveTab] = useState<"copilot" | "library">("library");
   const [insertedVisuals, setInsertedVisuals] = useState<InsertedVisual[]>([]);

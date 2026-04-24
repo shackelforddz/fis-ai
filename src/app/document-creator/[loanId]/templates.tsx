@@ -13,13 +13,22 @@ import { EditableBlock } from "./editable-block";
 import type { LoanEvaluation, Borrower, LoanType } from "@/lib/types";
 import { performanceData } from "@/lib/mock-data";
 
-export type TemplateKey = "credit-memo" | "term-sheet" | "tenant-audit" | "loi";
+export type TemplateKey =
+  | "credit-memo"
+  | "term-sheet"
+  | "tenant-audit"
+  | "loi"
+  | "restructure";
 
 export const TEMPLATES: Record<TemplateKey, { label: string; titleSuffix: string }> = {
   "credit-memo": { label: "Credit Memo", titleSuffix: "Credit Memorandum" },
   "term-sheet": { label: "Term Sheet", titleSuffix: "Term Sheet" },
   "tenant-audit": { label: "Tenant Audit Report", titleSuffix: "Tenant Audit Report" },
   loi: { label: "Letter of Intent", titleSuffix: "Letter of Intent" },
+  restructure: {
+    label: "Restructuring Proposal",
+    titleSuffix: "Restructuring Proposal",
+  },
 };
 
 const currency = (n: number, compact = false) =>
@@ -98,7 +107,97 @@ export function TemplateContent({
   if (templateKey === "credit-memo") return <CreditMemo loan={loan} borrower={borrower} />;
   if (templateKey === "term-sheet") return <TermSheet loan={loan} borrower={borrower} />;
   if (templateKey === "tenant-audit") return <TenantAudit loan={loan} />;
+  if (templateKey === "restructure") return <Restructure loan={loan} borrower={borrower} />;
   return <LetterOfIntent loan={loan} borrower={borrower} />;
+}
+
+function Restructure({
+  loan,
+  borrower,
+}: {
+  loan: LoanEvaluation;
+  borrower?: Borrower;
+}) {
+  const industry = borrower?.industry ?? "commercial operator";
+  const facility = borrower?.currentFacilitySummary ?? "";
+  const amountFmt = currency(loan.loanAmount);
+
+  return (
+    <>
+      <Section heading="I. Executive Summary">
+        <Paragraph
+          html={`This memorandum proposes a restructuring of the existing <strong>${amountFmt}</strong> ${loan.loanType} facility with <strong>${loan.borrowerName}</strong>. Recent performance indicators — including elevated line utilization, widening DSO, and compressed debt service coverage — warrant proactive covenant and structural amendments to preserve credit quality and align payment obligations with current cash flow.`}
+        />
+      </Section>
+
+      <Section heading="II. Borrower Profile">
+        <Paragraph
+          html={`${loan.borrowerName} operates in the ${industry} sector${
+            facility ? ` and currently maintains ${facility.toLowerCase()}` : ""
+          }. Management has engaged cooperatively on data requests and has provided a go-forward operating plan supporting the proposed restructure.`}
+        />
+      </Section>
+
+      <Section heading="III. Proposed Restructuring Terms">
+        <HtmlBlock
+          html={`
+            <table>
+              <tbody>
+                <tr><td class="doc-label-cell">Existing Commitment</td><td>${amountFmt}</td></tr>
+                <tr><td class="doc-label-cell">Revised Structure</td><td>Converted to a 24-month term loan with monthly amortization</td></tr>
+                <tr><td class="doc-label-cell">Amortization</td><td>10-year schedule; balloon at month 24</td></tr>
+                <tr><td class="doc-label-cell">Revised Rate</td><td>SOFR + 400 bps (cash), PIK step-up on covenant breach</td></tr>
+                <tr><td class="doc-label-cell">DSCR Covenant</td><td>Stepped: 1.05x Q1, 1.15x Q2, 1.25x thereafter</td></tr>
+                <tr><td class="doc-label-cell">Minimum Liquidity</td><td>$500,000 tested monthly</td></tr>
+                <tr><td class="doc-label-cell">Restructure Fee</td><td>0.50% of outstanding at closing</td></tr>
+                <tr><td class="doc-label-cell">Effective Date</td><td>Upon execution of amended credit agreement</td></tr>
+              </tbody>
+            </table>
+          `}
+        />
+      </Section>
+
+      <Section heading="IV. Rationale & Key Concessions">
+        <HtmlBlock
+          html={`
+            <ul>
+              <li>Convert revolver to term to eliminate line utilization pressure and normalize monthly obligations</li>
+              <li>Introduce stepped DSCR schedule to provide runway while seasonal collections normalize</li>
+              <li>Add minimum liquidity covenant as forward-looking tripwire</li>
+              <li>Rate reflects revised risk profile; PIK step-up preserves optionality without forcing default</li>
+              <li>Restructure fee offsets incremental workout costs and signals borrower commitment</li>
+            </ul>
+          `}
+        />
+      </Section>
+
+      <Section heading="V. Conditions Precedent">
+        <HtmlBlock
+          html={`
+            <ul>
+              <li>Satisfactory field exam within 30 days of executing the restructure</li>
+              <li>Updated 13-week cash flow forecast with weekly variance reporting for first two quarters</li>
+              <li>Personal guaranty reaffirmation from principal; validity guaranty from any new subsidiaries</li>
+              <li>Confirmation of insurance, tax, and UCC continuation filings in good standing</li>
+              <li>No material adverse change between proposal date and closing</li>
+            </ul>
+          `}
+        />
+      </Section>
+
+      <Section heading="VI. Monitoring & Reporting">
+        <Paragraph
+          html={`Monthly borrowing base certificates, weekly A/R agings, and a quarterly covenant compliance certificate co-signed by the CFO. Portfolio monitoring team to review 13-week cash flow variance monthly and escalate if cumulative burn exceeds 10% of forecast.`}
+        />
+      </Section>
+
+      <Section heading="VII. Recommendation">
+        <Paragraph
+          html={`<strong>Approve as restructured.</strong> The proposed terms balance near-term flexibility with tighter monitoring and enhanced covenants, preserving the relationship while materially improving the lender's position relative to the as-is facility.`}
+        />
+      </Section>
+    </>
+  );
 }
 
 function CreditMemo({

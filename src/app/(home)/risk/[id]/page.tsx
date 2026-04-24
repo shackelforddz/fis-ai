@@ -301,7 +301,7 @@ export default function BorrowerRiskDetailPage({
               className="shrink-0 w-[152px]"
               render={
                 <Link
-                  href={`/document-creator/${risk.borrowerId}?template=credit-memo`}
+                  href={`/document-creator/${risk.borrowerId}?template=restructure`}
                 />
               }
             >

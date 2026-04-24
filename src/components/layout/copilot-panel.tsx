@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState, useMemo } from "react";
+import { usePathname } from "next/navigation";
 import { useChat } from "@ai-sdk/react";
 import { Chat } from "@ai-sdk/react";
 import { Plus, Send, Square } from "lucide-react";
@@ -16,14 +17,91 @@ import {
   Tooltip as RechartsTooltip,
   XAxis,
 } from "recharts";
+import { Badge } from "@/components/ui/badge";
 
-const recommendedPrompts = [
-  "Find clients who have applied for new permits (commercial real estate) and determine if they have the liquidity to do it.",
-  "Priority action items based on real-time portfolio performance signals and risk assessment modeling",
-  "Which borrowers are at risk of covenant violations in the next 90 days?",
-  "Summarize DSO trends across the portfolio and flag any outliers.",
-  "Identify borrowers with high utilization that may need a credit line increase.",
+type PromptSuggestion = { badge?: string; prompt: string };
+
+const DEFAULT_PROMPTS: PromptSuggestion[] = [
+  {
+    badge: "Market Gaps",
+    prompt:
+      "Find clients who have applied for new permits (commercial real estate) and determine if they have the liquidity to do it.",
+  },
+  {
+    badge: "Portfolio triage",
+    prompt:
+      "Priority action items based on real-time portfolio performance signals and risk assessment modeling",
+  },
+  {
+    badge: "Operational & Compliance",
+    prompt:
+      "Which borrowers are at risk of covenant violations in the next 90 days?",
+  },
+  {
+    badge: "Performance signals",
+    prompt: "Summarize DSO trends across the portfolio and flag any outliers.",
+  },
+  {
+    badge: "Upsell signals",
+    prompt:
+      "Identify borrowers with high utilization that may need a credit line increase.",
+  },
 ];
+
+const OPPORTUNITY_PROMPTS: PromptSuggestion[] = [
+  {
+    badge: "Defensive insights",
+    prompt:
+      "Show me clients who recently had a new UCC filing with a competitor determine if they are our customer, if so summarize our last three interactions and the overall sentiment.",
+  },
+  {
+    badge: "Networking",
+    prompt:
+      "I'm meeting with Vanguard provide any recent relevant news about them and summarize our last three interactions to provide me with a few talking points.",
+  },
+  {
+    badge: "Market Gaps",
+    prompt:
+      "Who has grown 15% this year, but doesn't currently have a product with us?",
+  },
+];
+
+const RISK_PROMPTS: PromptSuggestion[] = [
+  {
+    badge: "Deal intention vs reality",
+    prompt:
+      "Identify any borrowers whose monthly debt service is now being paid from an 'Interest Reserve' instead of property operations",
+  },
+  {
+    badge: "Behavioral",
+    prompt:
+      "Identify borrowers who have requested more than two 'Payment Date' extensions in the last six months",
+  },
+  {
+    badge: "Operational & Compliance",
+    prompt:
+      "Audit the portfolio for any UCC-1 filings expiring in the next 120 days where a 'Continuation' hasn't been drafted",
+  },
+];
+
+function usePromptSuggestions(): PromptSuggestion[] {
+  const pathname = usePathname();
+  if (
+    pathname === "/risks" ||
+    pathname.startsWith("/risks/") ||
+    pathname.startsWith("/risk/")
+  ) {
+    return RISK_PROMPTS;
+  }
+  if (
+    pathname === "/opportunities" ||
+    pathname.startsWith("/opportunities/") ||
+    pathname.startsWith("/borrower/")
+  ) {
+    return OPPORTUNITY_PROMPTS;
+  }
+  return DEFAULT_PROMPTS;
+}
 
 function getMessageText(msg: { parts: ReadonlyArray<{ type: string; text?: string }> }) {
   return msg.parts
@@ -399,6 +477,7 @@ export function CopilotChat() {
   });
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const promptSuggestions = usePromptSuggestions();
 
   const isLoading = status === "submitted" || status === "streaming";
 
@@ -458,13 +537,18 @@ export function CopilotChat() {
               Recommended Prompts
             </span>
             <div className="flex gap-2 overflow-x-auto pb-1 -mx-6 px-6 scrollbar-hide">
-              {recommendedPrompts.map((prompt, i) => (
+              {promptSuggestions.map((suggestion, i) => (
                 <button
                   key={i}
-                  className="bg-gray-900 rounded-md p-4 text-sm text-muted-foreground text-left hover:bg-secondary transition-colors w-[200px] min-w-[200px] shrink-0"
-                  onClick={() => handleSend(prompt)}
+                  className="bg-gray-900 rounded-md p-4 text-sm text-muted-foreground text-left hover:bg-secondary transition-colors w-[200px] min-w-[200px] shrink-0 flex flex-col gap-2"
+                  onClick={() => handleSend(suggestion.prompt)}
                 >
-                  {prompt}
+                  {suggestion.badge && (
+                    <Badge variant="secondary" className="self-start">
+                      {suggestion.badge}
+                    </Badge>
+                  )}
+                  <span>{suggestion.prompt}</span>
                 </button>
               ))}
             </div>
