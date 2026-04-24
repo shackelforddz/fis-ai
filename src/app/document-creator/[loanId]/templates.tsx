@@ -11,7 +11,7 @@ import {
 } from "recharts";
 import { EditableBlock } from "./editable-block";
 import type { LoanEvaluation, Borrower, LoanType } from "@/lib/types";
-import { performanceData } from "@/lib/loan-detail-data";
+import { performanceData } from "@/lib/mock-data";
 
 export type TemplateKey = "credit-memo" | "term-sheet" | "tenant-audit" | "loi";
 

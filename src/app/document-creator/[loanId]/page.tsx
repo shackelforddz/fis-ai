@@ -44,8 +44,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { CopilotChat } from "@/components/layout/copilot-panel";
 import { cn } from "@/lib/utils";
-import { loanEvaluations, borrowers } from "@/lib/mock-data";
 import {
+  loanEvaluations,
+  borrowers,
   performanceData,
   erpData,
   experianScore,
@@ -55,7 +56,7 @@ import {
   experianStats,
   ficoStats,
   type Stat,
-} from "@/lib/loan-detail-data";
+} from "@/lib/mock-data";
 import {
   LineChart,
   Line,

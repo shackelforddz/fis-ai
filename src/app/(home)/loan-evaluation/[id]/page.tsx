@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/table";
 import { SectionCard } from "@/components/borrower/section-card";
 import { AnimateInView } from "@/components/ui/animate-in-view";
-import { loanEvaluations } from "@/lib/mock-data";
 import {
+  loanEvaluations,
   performanceData,
   erpData,
   experianScore,
@@ -26,7 +26,7 @@ import {
   erpStats,
   experianStats,
   ficoStats,
-} from "@/lib/loan-detail-data";
+} from "@/lib/mock-data";
 import {
   LineChart,
   Line,

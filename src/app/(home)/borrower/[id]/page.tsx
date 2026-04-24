@@ -44,7 +44,17 @@ import {
 import { SectionCard } from "@/components/borrower/section-card";
 import { AnimateInView } from "@/components/ui/animate-in-view";
 import { cn } from "@/lib/utils";
-import { borrowers, covenants } from "@/lib/mock-data";
+import {
+  borrowers,
+  covenants,
+  operatingBufferSeries,
+  paymentFlowSeries,
+  networkScanSeries,
+  jobFunctionData,
+  dscrSeries,
+  servicingSeries,
+  marketSeries,
+} from "@/lib/mock-data";
 
 const CHART_GREEN = "#4bcd3e";
 const CHART_GREEN_DARK = "#2f9d24";
@@ -110,11 +120,36 @@ function StatRow({ items }: { items: StatItem[] }) {
 }
 
 const relatedOpportunities = [
-  { value: "$2,500,000", type: "Upsell", date: "2026-06-30" },
-  { value: "$99.99", type: "Upsell", date: "2026-06-30" },
-  { value: "$199.99", type: "Upsell", date: "2026-06-30" },
-  { value: "$79.99", type: "Upsell", date: "2026-06-30" },
-  { value: "$399.99", type: "Upsell", date: "2026-06-30" },
+  {
+    borrower: "Meridian Freight Co.",
+    value: "$2,500,000",
+    type: "Upsell",
+    date: "2025-11-18",
+  },
+  {
+    borrower: "Cascade Industrial Group",
+    value: "$4,150,000",
+    type: "Refinance",
+    date: "2025-09-02",
+  },
+  {
+    borrower: "Northline Manufacturing",
+    value: "$1,850,000",
+    type: "Upsell",
+    date: "2025-07-24",
+  },
+  {
+    borrower: "Harbor Point Holdings",
+    value: "$3,200,000",
+    type: "Restructure",
+    date: "2025-05-10",
+  },
+  {
+    borrower: "Summit Logistics Partners",
+    value: "$975,000",
+    type: "Upsell",
+    date: "2025-03-31",
+  },
 ];
 
 const strategyDetails = {
@@ -147,97 +182,6 @@ const covenantRowExtras: Array<{
   { riskSignal: "Fuel Costs", impact: "Margin & DSCR", strategy: "Hedging Req" },
   { riskSignal: "Fuel Costs", impact: "Margin & DSCR", strategy: "Amendment" },
   { riskSignal: "Fuel Costs", impact: "Margin & DSCR", strategy: "Amendment" },
-];
-
-const operatingBufferSeries = [
-  { month: "May", balance: 820 },
-  { month: "Jun", balance: 790 },
-  { month: "Jul", balance: 760 },
-  { month: "Aug", balance: 740 },
-  { month: "Sep", balance: 715 },
-  { month: "Oct", balance: 690 },
-  { month: "Nov", balance: 665 },
-  { month: "Dec", balance: 640 },
-  { month: "Jan", balance: 615 },
-  { month: "Feb", balance: 590 },
-  { month: "Mar", balance: 570 },
-  { month: "Apr", balance: 555 },
-];
-
-const paymentFlowSeries = [
-  { week: "W1", ach: 240, wire: 180 },
-  { week: "W2", ach: 255, wire: 190 },
-  { week: "W3", ach: 270, wire: 200 },
-  { week: "W4", ach: 290, wire: 210 },
-  { week: "W5", ach: 305, wire: 225 },
-  { week: "W6", ach: 320, wire: 240 },
-  { week: "W7", ach: 340, wire: 255 },
-  { week: "W8", ach: 360, wire: 270 },
-  { week: "W9", ach: 380, wire: 285 },
-  { week: "W10", ach: 405, wire: 300 },
-  { week: "W11", ach: 425, wire: 315 },
-  { week: "W12", ach: 445, wire: 330 },
-];
-
-const networkScanSeries = [
-  { month: "Nov", postings: 2, joins: 1 },
-  { month: "Dec", postings: 3, joins: 2 },
-  { month: "Jan", postings: 5, joins: 3 },
-  { month: "Feb", postings: 8, joins: 5 },
-  { month: "Mar", postings: 12, joins: 8 },
-  { month: "Apr", postings: 18, joins: 12 },
-];
-
-const jobFunctionData = [
-  { name: "Operations", value: 45, color: CHART_GREEN },
-  { name: "Fleet management", value: 30, color: "#16a34a" },
-  { name: "Driver / Field", value: 15, color: "#15803d" },
-  { name: "Finance", value: 10, color: "#166534" },
-];
-
-const dscrSeries = [
-  { month: "May", dscr: 1.32 },
-  { month: "Jun", dscr: 1.35 },
-  { month: "Jul", dscr: 1.38 },
-  { month: "Aug", dscr: 1.36 },
-  { month: "Sep", dscr: 1.4 },
-  { month: "Oct", dscr: 1.42 },
-  { month: "Nov", dscr: 1.41 },
-  { month: "Dec", dscr: 1.44 },
-  { month: "Jan", dscr: 1.43 },
-  { month: "Feb", dscr: 1.45 },
-  { month: "Mar", dscr: 1.42 },
-  { month: "Apr", dscr: 1.42 },
-];
-
-const servicingSeries = [
-  { week: "W1", volume: 420 },
-  { week: "W2", volume: 435 },
-  { week: "W3", volume: 460 },
-  { week: "W4", volume: 472 },
-  { week: "W5", volume: 498 },
-  { week: "W6", volume: 515 },
-  { week: "W7", volume: 540 },
-  { week: "W8", volume: 562 },
-  { week: "W9", volume: 588 },
-  { week: "W10", volume: 610 },
-  { week: "W11", volume: 640 },
-  { week: "W12", volume: 672 },
-];
-
-const marketSeries = [
-  { month: "May", value: 7.9 },
-  { month: "Jun", value: 7.95 },
-  { month: "Jul", value: 8.02 },
-  { month: "Aug", value: 8.1 },
-  { month: "Sep", value: 8.15 },
-  { month: "Oct", value: 8.2 },
-  { month: "Nov", value: 8.25 },
-  { month: "Dec", value: 8.28 },
-  { month: "Jan", value: 8.3 },
-  { month: "Feb", value: 8.34 },
-  { month: "Mar", value: 8.38 },
-  { month: "Apr", value: 8.4 },
 ];
 
 export default function BorrowerDetailPage({
@@ -358,7 +302,7 @@ export default function BorrowerDetailPage({
             {relatedOpportunities.map((item, i) => (
               <TableRow key={`${item.value}-${i}`}>
                 <TableCell className="text-sm max-w-[180px] truncate">
-                  {borrower.name}
+                  {item.borrower}
                 </TableCell>
                 <TableCell className="text-sm text-muted-foreground">
                   {item.value}

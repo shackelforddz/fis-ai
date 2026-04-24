@@ -5,6 +5,7 @@ import type {
   ServicingIndicator,
   DSODataPoint,
   PublicRecord,
+  CommercialPermit,
   Covenant,
   ConcentrationEntry,
   Transaction,
@@ -398,6 +399,48 @@ export const publicRecords: PublicRecord[] = [
     source: "Ohio Courts Network",
     severity: "Watch",
     description: "Breach of contract claim — dispute over equipment delivery terms",
+  },
+];
+
+export const commercialPermits: CommercialPermit[] = [
+  {
+    id: "perm-001",
+    borrowerId: "bor-001",
+    borrowerName: "Vanguard Logistics Ltd.",
+    permitType: "New Construction",
+    propertyAddress: "4820 Industrial Pkwy, Columbus, OH 43219",
+    jurisdiction: "City of Columbus Building Services",
+    projectDescription:
+      "180,000 sq ft cross-dock distribution facility with 42 loading bays",
+    estimatedProjectValue: 18_500_000,
+    filingDate: "2026-03-28",
+    status: "Under Review",
+  },
+  {
+    id: "perm-002",
+    borrowerId: "bor-005",
+    borrowerName: "TechVenture Solutions Inc",
+    permitType: "Tenant Improvement",
+    propertyAddress: "1200 Market St, Floor 14-16, San Francisco, CA 94102",
+    jurisdiction: "San Francisco Department of Building Inspection",
+    projectDescription:
+      "Three-floor office build-out for R&D expansion — 48,000 sq ft, new datacenter pod",
+    estimatedProjectValue: 6_200_000,
+    filingDate: "2026-04-11",
+    status: "Submitted",
+  },
+  {
+    id: "perm-003",
+    borrowerId: "bor-003",
+    borrowerName: "Coastal Health Services",
+    permitType: "Expansion",
+    propertyAddress: "2215 Harborview Blvd, Norfolk, VA 23510",
+    jurisdiction: "City of Norfolk Planning & Zoning",
+    projectDescription:
+      "Ambulatory surgery wing — 22,000 sq ft addition to existing outpatient center",
+    estimatedProjectValue: 9_750_000,
+    filingDate: "2026-04-02",
+    status: "Under Review",
   },
 ];
 
@@ -799,4 +842,215 @@ export const loanEvaluations: LoanEvaluation[] = [
     assignedOfficer: "Michael Rodriguez",
     confidenceScore: 61,
   },
+];
+
+// ───────────────────────────────────────────────────────────────
+// Chart / data-visual series used on detail pages
+// ───────────────────────────────────────────────────────────────
+
+export interface Stat {
+  label: string;
+  value: string;
+  subLabel?: string;
+}
+
+// Loan Evaluation detail
+
+export const performanceData = [
+  { month: "Jan", series1: 320, series2: 280 },
+  { month: "Feb", series1: 350, series2: 310 },
+  { month: "Mar", series1: 380, series2: 290 },
+  { month: "Apr", series1: 420, series2: 340 },
+  { month: "May", series1: 390, series2: 360 },
+  { month: "Jun", series1: 450, series2: 380 },
+  { month: "Jul", series1: 470, series2: 400 },
+  { month: "Aug", series1: 440, series2: 420 },
+  { month: "Sep", series1: 500, series2: 390 },
+  { month: "Oct", series1: 520, series2: 430 },
+  { month: "Nov", series1: 490, series2: 450 },
+  { month: "Dec", series1: 540, series2: 460 },
+];
+
+export const erpData = [
+  { month: "Jan", revenue: 980, ebitda: 220 },
+  { month: "Feb", revenue: 1020, ebitda: 235 },
+  { month: "Mar", revenue: 1050, ebitda: 240 },
+  { month: "Apr", revenue: 1100, ebitda: 260 },
+  { month: "May", revenue: 1080, ebitda: 250 },
+  { month: "Jun", revenue: 1150, ebitda: 275 },
+  { month: "Jul", revenue: 1180, ebitda: 280 },
+  { month: "Aug", revenue: 1130, ebitda: 265 },
+  { month: "Sep", revenue: 1200, ebitda: 290 },
+  { month: "Oct", revenue: 1250, ebitda: 300 },
+  { month: "Nov", revenue: 1220, ebitda: 295 },
+  { month: "Dec", revenue: 1300, ebitda: 310 },
+];
+
+export const experianScore = 84;
+export const ficoScore = 1125;
+
+export const performanceStats: Stat[] = [
+  { label: "Avg Deposit Balances", value: "$412,500" },
+  { label: "Overdraft History", value: "0" },
+  { label: "Cash Flow Volatility", value: "Low" },
+];
+
+export const erpStats: Stat[] = [
+  { label: "Total Revenue", value: "$12,450,000" },
+  { label: "EBITDA", value: "$2,290,000" },
+  { label: "Gross Margin", value: "42.5%" },
+  { label: "Net Income", value: "$1,850,000" },
+];
+
+export const experianStats: Stat[] = [
+  { label: "Liens/Judgments", value: "0" },
+  { label: "Bankruptcies", value: "0" },
+  { label: "Late Payments (90d+)", value: "0" },
+];
+
+export const ficoStats: Stat[] = [
+  { label: "Collections", value: "0" },
+  { label: "Total Trade Lines", value: "12" },
+  { label: "Total Trade Loans", value: "$1.2M" },
+];
+
+// Borrower detail
+
+export const operatingBufferSeries = [
+  { month: "May", balance: 820 },
+  { month: "Jun", balance: 790 },
+  { month: "Jul", balance: 760 },
+  { month: "Aug", balance: 740 },
+  { month: "Sep", balance: 715 },
+  { month: "Oct", balance: 690 },
+  { month: "Nov", balance: 665 },
+  { month: "Dec", balance: 640 },
+  { month: "Jan", balance: 615 },
+  { month: "Feb", balance: 590 },
+  { month: "Mar", balance: 570 },
+  { month: "Apr", balance: 555 },
+];
+
+export const paymentFlowSeries = [
+  { week: "W1", ach: 240, wire: 180 },
+  { week: "W2", ach: 255, wire: 190 },
+  { week: "W3", ach: 270, wire: 200 },
+  { week: "W4", ach: 290, wire: 210 },
+  { week: "W5", ach: 305, wire: 225 },
+  { week: "W6", ach: 320, wire: 240 },
+  { week: "W7", ach: 340, wire: 255 },
+  { week: "W8", ach: 360, wire: 270 },
+  { week: "W9", ach: 380, wire: 285 },
+  { week: "W10", ach: 405, wire: 300 },
+  { week: "W11", ach: 425, wire: 315 },
+  { week: "W12", ach: 445, wire: 330 },
+];
+
+export const networkScanSeries = [
+  { month: "Nov", postings: 2, joins: 1 },
+  { month: "Dec", postings: 3, joins: 2 },
+  { month: "Jan", postings: 5, joins: 3 },
+  { month: "Feb", postings: 8, joins: 5 },
+  { month: "Mar", postings: 12, joins: 8 },
+  { month: "Apr", postings: 18, joins: 12 },
+];
+
+export const jobFunctionData = [
+  { name: "Operations", value: 45, color: "#4bcd3e" },
+  { name: "Fleet management", value: 30, color: "#16a34a" },
+  { name: "Driver / Field", value: 15, color: "#15803d" },
+  { name: "Finance", value: 10, color: "#166534" },
+];
+
+export const dscrSeries = [
+  { month: "May", dscr: 1.32 },
+  { month: "Jun", dscr: 1.35 },
+  { month: "Jul", dscr: 1.38 },
+  { month: "Aug", dscr: 1.36 },
+  { month: "Sep", dscr: 1.4 },
+  { month: "Oct", dscr: 1.42 },
+  { month: "Nov", dscr: 1.41 },
+  { month: "Dec", dscr: 1.44 },
+  { month: "Jan", dscr: 1.43 },
+  { month: "Feb", dscr: 1.45 },
+  { month: "Mar", dscr: 1.42 },
+  { month: "Apr", dscr: 1.42 },
+];
+
+export const servicingSeries = [
+  { week: "W1", volume: 420 },
+  { week: "W2", volume: 435 },
+  { week: "W3", volume: 460 },
+  { week: "W4", volume: 472 },
+  { week: "W5", volume: 498 },
+  { week: "W6", volume: 515 },
+  { week: "W7", volume: 540 },
+  { week: "W8", volume: 562 },
+  { week: "W9", volume: 588 },
+  { week: "W10", volume: 610 },
+  { week: "W11", volume: 640 },
+  { week: "W12", volume: 672 },
+];
+
+export const marketSeries = [
+  { month: "May", value: 7.9 },
+  { month: "Jun", value: 7.95 },
+  { month: "Jul", value: 8.02 },
+  { month: "Aug", value: 8.1 },
+  { month: "Sep", value: 8.15 },
+  { month: "Oct", value: 8.2 },
+  { month: "Nov", value: 8.25 },
+  { month: "Dec", value: 8.28 },
+  { month: "Jan", value: 8.3 },
+  { month: "Feb", value: 8.34 },
+  { month: "Mar", value: 8.38 },
+  { month: "Apr", value: 8.4 },
+];
+
+// Risk detail — DSO accelerating, utilization climbing, SOFR forward curve, industry volume
+
+export const dsoSeries = [
+  { week: "W-8", dso: 45.6 },
+  { week: "W-7", dso: 46.2 },
+  { week: "W-6", dso: 46.9 },
+  { week: "W-5", dso: 47.8 },
+  { week: "W-4", dso: 48.6 },
+  { week: "W-3", dso: 49.7 },
+  { week: "W-2", dso: 50.8 },
+  { week: "W-1", dso: 51.6 },
+  { week: "Now", dso: 52.4 },
+];
+
+export const utilizationSeries = [
+  { month: "Aug", lineUtil: 82, poCoverage: 97, uncoveredDraw: 150 },
+  { month: "Sep", lineUtil: 85, poCoverage: 94, uncoveredDraw: 210 },
+  { month: "Oct", lineUtil: 88, poCoverage: 90, uncoveredDraw: 310 },
+  { month: "Nov", lineUtil: 91, poCoverage: 86, uncoveredDraw: 410 },
+  { month: "Dec", lineUtil: 93, poCoverage: 82, uncoveredDraw: 480 },
+  { month: "Jan", lineUtil: 95, poCoverage: 79, uncoveredDraw: 540 },
+  { month: "Feb", lineUtil: 96, poCoverage: 77, uncoveredDraw: 580 },
+  { month: "Mar", lineUtil: 97, poCoverage: 75, uncoveredDraw: 605 },
+  { month: "Apr", lineUtil: 98, poCoverage: 74.7, uncoveredDraw: 620 },
+];
+
+export const sofrSeries = [
+  { month: "May", sofr: 4.65, opCashFlow: 5.6 },
+  { month: "Jun", sofr: 4.74, opCashFlow: 5.5 },
+  { month: "Jul", sofr: 4.83, opCashFlow: 5.3 },
+  { month: "Aug", sofr: 4.93, opCashFlow: 5.1 },
+  { month: "Sep", sofr: 5.04, opCashFlow: 4.9 },
+  { month: "Oct", sofr: 5.15, opCashFlow: 4.7 },
+  { month: "Nov", sofr: 5.24, opCashFlow: 4.55 },
+  { month: "Dec", sofr: 5.32, opCashFlow: 4.4 },
+  { month: "Jan", sofr: 5.38, opCashFlow: 4.3 },
+  { month: "Feb", sofr: 5.41, opCashFlow: 4.2 },
+];
+
+export const industrySeries = [
+  { month: "Nov", volume: 108 },
+  { month: "Dec", volume: 104 },
+  { month: "Jan", volume: 101 },
+  { month: "Feb", volume: 97 },
+  { month: "Mar", volume: 94 },
+  { month: "Apr", volume: 91 },
 ];

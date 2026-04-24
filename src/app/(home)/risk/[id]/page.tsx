@@ -38,7 +38,13 @@ import {
 import { SectionCard } from "@/components/borrower/section-card";
 import { AnimateInView } from "@/components/ui/animate-in-view";
 import { cn } from "@/lib/utils";
-import { riskEntries } from "@/lib/mock-data";
+import {
+  riskEntries,
+  dsoSeries,
+  utilizationSeries,
+  sofrSeries,
+  industrySeries,
+} from "@/lib/mock-data";
 
 const RISK_RED = "#EB1F32";
 const CHART_GREEN = "#4bcd3e";
@@ -126,6 +132,39 @@ const strategyDetails = {
 
 type StrategyKey = keyof typeof strategyDetails;
 
+const relatedOpportunities = [
+  {
+    borrower: "Meridian Freight Co.",
+    value: "$2,500,000",
+    type: "Upsell",
+    date: "2025-11-18",
+  },
+  {
+    borrower: "Cascade Industrial Group",
+    value: "$4,150,000",
+    type: "Refinance",
+    date: "2025-09-02",
+  },
+  {
+    borrower: "Northline Manufacturing",
+    value: "$1,850,000",
+    type: "Upsell",
+    date: "2025-07-24",
+  },
+  {
+    borrower: "Harbor Point Holdings",
+    value: "$3,200,000",
+    type: "Restructure",
+    date: "2025-05-10",
+  },
+  {
+    borrower: "Summit Logistics Partners",
+    value: "$975,000",
+    type: "Upsell",
+    date: "2025-03-31",
+  },
+];
+
 const covenantRows: Array<{
   name: string;
   type: string;
@@ -145,93 +184,44 @@ const covenantRows: Array<{
     strategy: "Amendment",
   },
   {
-    name: "Debt Service Coverage Ratio",
+    name: "Minimum Liquidity",
     type: "Financial",
-    nextReview: "2026-06-30",
+    nextReview: "2026-05-15",
     status: "Compliant",
-    riskSignal: "Fuel Costs +10%",
-    impact: "Margin & DSCR Floor",
+    riskSignal: "Cash burn +22%",
+    impact: "Working capital runway",
     strategy: "Upsell",
   },
   {
-    name: "Debt Service Coverage Ratio",
+    name: "Maximum Leverage Ratio",
     type: "Financial",
-    nextReview: "2026-06-30",
+    nextReview: "2026-07-20",
     status: "Non-Compliant",
-    riskSignal: "Fuel Costs +10%",
-    impact: "Margin & DSCR Floor",
+    riskSignal: "EBITDA down 9%",
+    impact: "Debt/EBITDA ceiling",
     strategy: "Hedging Req",
   },
   {
-    name: "Debt Service Coverage Ratio",
-    type: "Financial",
-    nextReview: "2026-06-30",
+    name: "Insurance Maintenance",
+    type: "Non-Financial",
+    nextReview: "2026-04-30",
     status: "Compliant",
-    riskSignal: "Fuel Costs +10%",
-    impact: "Margin & DSCR Floor",
+    riskSignal: "Carrier renewal pending",
+    impact: "Collateral protection",
     strategy: "Amendment",
   },
   {
-    name: "Debt Service Coverage Ratio",
-    type: "Financial",
-    nextReview: "2026-06-30",
-    status: "Compliant",
-    riskSignal: "Fuel Costs +10%",
-    impact: "Margin & DSCR Floor",
+    name: "Quarterly Financial Reporting",
+    type: "Non-Financial",
+    nextReview: "2026-05-31",
+    status: "Pending",
+    riskSignal: "Q1 filing overdue 11d",
+    impact: "Monitoring visibility",
     strategy: "Amendment",
   },
 ];
 
 // DSO accelerating from 45.6 → 52.4 days. +15.1% change, +3.4 days velocity
-const dsoSeries = [
-  { week: "W-8", dso: 45.6 },
-  { week: "W-7", dso: 46.2 },
-  { week: "W-6", dso: 46.9 },
-  { week: "W-5", dso: 47.8 },
-  { week: "W-4", dso: 48.6 },
-  { week: "W-3", dso: 49.7 },
-  { week: "W-2", dso: 50.8 },
-  { week: "W-1", dso: 51.6 },
-  { week: "Now", dso: 52.4 },
-];
-
-// Line utilization climbing to 98%, PO coverage declining to 74.7%, and draw without PO
-const utilizationSeries = [
-  { month: "Aug", lineUtil: 82, poCoverage: 97, uncoveredDraw: 150 },
-  { month: "Sep", lineUtil: 85, poCoverage: 94, uncoveredDraw: 210 },
-  { month: "Oct", lineUtil: 88, poCoverage: 90, uncoveredDraw: 310 },
-  { month: "Nov", lineUtil: 91, poCoverage: 86, uncoveredDraw: 410 },
-  { month: "Dec", lineUtil: 93, poCoverage: 82, uncoveredDraw: 480 },
-  { month: "Jan", lineUtil: 95, poCoverage: 79, uncoveredDraw: 540 },
-  { month: "Feb", lineUtil: 96, poCoverage: 77, uncoveredDraw: 580 },
-  { month: "Mar", lineUtil: 97, poCoverage: 75, uncoveredDraw: 605 },
-  { month: "Apr", lineUtil: 98, poCoverage: 74.7, uncoveredDraw: 620 },
-];
-
-// SOFR forward curve: 4.83% now → 5.41% Q3 2026. Op cash flow flat, crossover Aug 2026.
-const sofrSeries = [
-  { month: "May", sofr: 4.65, opCashFlow: 5.6 },
-  { month: "Jun", sofr: 4.74, opCashFlow: 5.5 },
-  { month: "Jul", sofr: 4.83, opCashFlow: 5.3 },
-  { month: "Aug", sofr: 4.93, opCashFlow: 5.1 },
-  { month: "Sep", sofr: 5.04, opCashFlow: 4.9 },
-  { month: "Oct", sofr: 5.15, opCashFlow: 4.7 },
-  { month: "Nov", sofr: 5.24, opCashFlow: 4.55 },
-  { month: "Dec", sofr: 5.32, opCashFlow: 4.4 },
-  { month: "Jan", sofr: 5.38, opCashFlow: 4.3 },
-  { month: "Feb", sofr: 5.41, opCashFlow: 4.2 },
-];
-
-// Global shipping volume declining 8.4% vs prior period
-const industrySeries = [
-  { month: "Nov", volume: 108 },
-  { month: "Dec", volume: 104 },
-  { month: "Jan", volume: 101 },
-  { month: "Feb", volume: 97 },
-  { month: "Mar", volume: 94 },
-  { month: "Apr", volume: 91 },
-];
-
 export default function BorrowerRiskDetailPage({
   params,
 }: {
@@ -319,6 +309,47 @@ export default function BorrowerRiskDetailPage({
             </Button>
           </div>
         </div>
+
+        {/* Related successful opportunities */}
+        <SectionCard
+          title="Related successful opportunities"
+          subtitle="Real-time Indicators"
+        >
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Borrower</TableHead>
+                <TableHead>Value</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {relatedOpportunities.map((item, i) => (
+                <TableRow key={`${item.value}-${i}`}>
+                  <TableCell className="text-sm max-w-[180px] truncate">
+                    {item.borrower}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {item.value}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {item.type}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {item.date}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="ghost" size="icon-xs">
+                      <MoreHorizontal className="size-4" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </SectionCard>
 
         {/* Covenants */}
         <SectionCard title="Covenants" subtitle="Real-time Indicators">

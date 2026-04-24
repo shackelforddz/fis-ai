@@ -87,10 +87,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { borrowers, loanEvaluations } from "@/lib/mock-data";
+import {
+  borrowers,
+  loanEvaluations,
+  performanceData,
+} from "@/lib/mock-data";
 import type { Borrower, LoanEvaluation } from "@/lib/types";
 import { TemplateContent } from "@/app/document-creator/[loanId]/templates";
-import { performanceData } from "@/lib/loan-detail-data";
 
 const LIBRARY_NODES = [
   { id: "sensitivity", title: "Sensitivity Analysis" },

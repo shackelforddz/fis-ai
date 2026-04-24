@@ -128,6 +128,19 @@ export interface PublicRecord {
   description: string;
 }
 
+export interface CommercialPermit {
+  id: string;
+  borrowerId: string;
+  borrowerName: string;
+  permitType: "New Construction" | "Expansion" | "Tenant Improvement" | "Major Renovation";
+  propertyAddress: string;
+  jurisdiction: string;
+  projectDescription: string;
+  estimatedProjectValue: number;
+  filingDate: string;
+  status: "Submitted" | "Under Review" | "Approved";
+}
+
 export interface Covenant {
   id: string;
   name: string;
