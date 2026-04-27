@@ -59,7 +59,7 @@ export default function RisksPage() {
       {/* Content */}
       <div className="flex-1 min-h-0 flex flex-col gap-6">
         {/* Search + Filters */}
-        <div className="flex gap-4 items-center shrink-0">
+        <div className="flex gap-4 items-center shrink-0 bg-gray-900 rounded-full p-4">
           {/* Search Input */}
           <div className="flex-1 h-8 border border-input rounded-full flex items-center gap-1.5 px-2.5 py-1">
             <Search className="size-4 text-muted-foreground shrink-0" />
