@@ -84,6 +84,15 @@ const RISK_PROMPTS: PromptSuggestion[] = [
   },
 ];
 
+const LOAN_EVAL_PROMPTS: PromptSuggestion[] = [
+  {
+    badge: "Deal structuring",
+    prompt:
+      "Suggests pricing/structure and covenants based on similar deals that have gotten approved",
+  },
+  ...DEFAULT_PROMPTS,
+];
+
 function usePromptSuggestions(): PromptSuggestion[] {
   const pathname = usePathname();
   if (
@@ -99,6 +108,12 @@ function usePromptSuggestions(): PromptSuggestion[] {
     pathname.startsWith("/borrower/")
   ) {
     return OPPORTUNITY_PROMPTS;
+  }
+  if (
+    pathname === "/loan-evaluation" ||
+    pathname.startsWith("/loan-evaluation/")
+  ) {
+    return LOAN_EVAL_PROMPTS;
   }
   return DEFAULT_PROMPTS;
 }

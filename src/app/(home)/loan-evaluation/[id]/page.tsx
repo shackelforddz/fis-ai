@@ -211,8 +211,27 @@ export default function LoanDetailPage({
   const loanTypeLabel =
     loan.loanType === "CRE Refinance" ? "Commercial Real Estate" : loan.loanType;
 
-  const summary =
-    "Borrower shows consistent 15% WoW growth in servicing volumes. Eligible for credit line expansion up to $500k. Company showing 12.4% increase in headcount.";
+  const isLoan001 = loan.id === "loan-001";
+  const subheading = isLoan001
+    ? "$4.2M for the acquisition and light renovation of a mixed-use building (Ground floor retail + 12 loft apartments)"
+    : `${loanAmountFormatted} ${loanTypeLabel} Loan`;
+
+  const summarySections: Array<{ heading?: string; body: string }> = isLoan001
+    ? [
+        {
+          heading: "Rule Triggered",
+          body: "RULE_CREDIT_042: DSCR < 1.25x. System Logic: The current rent roll provides enough cash flow to cover the debt, but the margin of safety is below the standard bank threshold due to a recent spike in local property taxes.",
+        },
+        {
+          heading: "Recommendation",
+          body: "Counter-Offer Potential: The system suggests that if the loan amount is reduced to $3.8M, the DSCR would return to a pass state (1.30x).",
+        },
+      ]
+    : [
+        {
+          body: "Borrower shows consistent 15% WoW growth in servicing volumes. Eligible for credit line expansion up to $500k. Company showing 12.4% increase in headcount.",
+        },
+      ];
 
   return (
     <div className="flex flex-col gap-6">
@@ -254,9 +273,7 @@ export default function LoanDetailPage({
         <div className="flex-1 bg-gray-900 rounded-xl p-6 flex flex-col gap-4 min-w-0">
           <div>
             <h1 className="text-4xl text-foreground">{loan.borrowerName}</h1>
-            <p className="text-sm text-muted-foreground">
-              {loanAmountFormatted} {loanTypeLabel} Loan
-            </p>
+            <p className="text-sm text-muted-foreground">{subheading}</p>
           </div>
           <div className="flex gap-2">
             <Badge variant="outline">Draft</Badge>
@@ -264,12 +281,23 @@ export default function LoanDetailPage({
               {loan.status}
             </Badge>
           </div>
-          <p className="text-base text-foreground leading-relaxed max-w-3xl">
-            {summary}
-          </p>
+          <div className="flex flex-col gap-3 max-w-3xl">
+            {summarySections.map((section, i) => (
+              <div key={i} className="flex flex-col gap-1">
+                {section.heading && (
+                  <span className="text-xs font-bold text-muted-foreground">
+                    {section.heading}
+                  </span>
+                )}
+                <p className="text-base text-foreground leading-relaxed">
+                  {section.body}
+                </p>
+              </div>
+            ))}
+          </div>
           <div className="flex gap-2 mt-auto">
             <Button variant="secondary">Export</Button>
-            <Button>Approve</Button>
+            <Button>Submit</Button>
           </div>
         </div>
       </div>

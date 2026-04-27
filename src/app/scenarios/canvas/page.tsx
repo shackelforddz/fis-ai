@@ -997,7 +997,7 @@ function CanvasView() {
             <span>{borrowerName}</span>
           )}
           <ChevronRight className="size-4" />
-          <span className="text-foreground">Scenario Creator</span>
+          <span className="text-foreground">Visual Scenario Analysis Tool</span>
         </nav>
 
         <div className="shrink-0 flex items-start gap-4">

@@ -35,6 +35,15 @@ import {
   utilizationSeries,
   sofrSeries,
   industrySeries,
+  competitorUccFilings,
+  borrowerInteractions,
+  borrowerNews,
+  growthProspects,
+  interestReserveStatus,
+  paymentExtensionRequests,
+  uccContinuationTracking,
+  historicalApprovedDeals,
+  borrowerProductHoldings,
 } from "@/lib/mock-data";
 
 const PORTFOLIO_CONTEXT = JSON.stringify({
@@ -77,6 +86,17 @@ const PORTFOLIO_CONTEXT = JSON.stringify({
     utilizationSeries,
     sofrSeries,
     industrySeries,
+  },
+  promptSupport: {
+    competitorUccFilings,
+    borrowerInteractions,
+    borrowerNews,
+    growthProspects,
+    interestReserveStatus,
+    paymentExtensionRequests,
+    uccContinuationTracking,
+    historicalApprovedDeals,
+    borrowerProductHoldings,
   },
 });
 

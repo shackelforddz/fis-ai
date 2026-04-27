@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { EditableBlock } from "./editable-block";
-import type { LoanEvaluation, Borrower, LoanType } from "@/lib/types";
+import type { LoanEvaluation, Borrower } from "@/lib/types";
 import { performanceData } from "@/lib/mock-data";
 
 export type TemplateKey =
@@ -46,19 +46,6 @@ const longDate = (iso: string) =>
     month: "long",
     day: "numeric",
   });
-
-const purposeByType: Record<LoanType, string> = {
-  "CRE Refinance":
-    "refinance an existing commercial real estate facility and reposition the capital stack.",
-  Construction: "fund the development of a new construction project.",
-  "Equipment Finance":
-    "acquire capital equipment in support of operational expansion.",
-  "SBA 7(a)":
-    "fund working capital and facility improvements under the SBA 7(a) program.",
-  "Revolving Credit":
-    "establish a revolving credit facility to support seasonal working capital.",
-  "Term Loan": "fund strategic growth initiatives through a medium-term loan.",
-};
 
 const recommendationByAnalysis: Record<string, string> = {
   "Likely approved":
@@ -207,10 +194,7 @@ function CreditMemo({
   loan: LoanEvaluation;
   borrower?: Borrower;
 }) {
-  const industry = borrower?.industry ?? "commercial operator";
-  const facility = borrower?.currentFacilitySummary ?? "";
-  const amountFmt = currency(loan.loanAmount);
-  const purpose = purposeByType[loan.loanType] ?? "fund general corporate purposes.";
+  void borrower;
   const reco =
     recommendationByAnalysis[loan.analysis] ?? recommendationByAnalysis["Review needed"];
   const submission = longDate(loan.submissionDate);
@@ -219,15 +203,13 @@ function CreditMemo({
     <>
       <Section heading="I. Executive Summary">
         <Paragraph
-          html={`<strong>${loan.borrowerName}</strong>, a ${industry} operator, is requesting a <strong>${amountFmt}</strong> ${loan.loanType} facility to ${purpose} The request was submitted on ${submission} and assigned to ${loan.assignedOfficer}. Our automated decisioning engine has produced a confidence score of <strong>${loan.confidenceScore}/100</strong> with an initial analysis of <strong>${loan.analysis.toLowerCase()}</strong>.`}
+          html={`<strong>${loan.borrowerName}</strong>, a multifamily real estate investor, is requesting a <strong>$15,000,000</strong> acquisition + value-add loan to purchase a <strong>100-unit garden-style apartment complex</strong>. The sponsor's plan is to deploy a unit-by-unit renovation program, reposition the rent roll to current market levels, and stabilize the asset within <strong>24 months</strong> of close. The request was submitted on ${submission} and assigned to ${loan.assignedOfficer}. Our automated decisioning engine has produced a confidence score of <strong>${loan.confidenceScore}/100</strong> with an initial analysis of <strong>${loan.analysis.toLowerCase()}</strong>.`}
         />
       </Section>
 
-      <Section heading="II. Borrower Profile">
+      <Section heading="II. Sponsor Profile">
         <Paragraph
-          html={`${loan.borrowerName} operates within the ${industry} sector${
-            facility ? ` and currently maintains ${facility.toLowerCase()}` : ""
-          }. Management has demonstrated consistent operating performance across multiple cycles and maintains leverage conservative to industry medians. No material adverse changes have been identified during initial due diligence.`}
+          html={`${loan.borrowerName} is an experienced multifamily operator with a track record of value-add executions across comparable garden-style assets. The sponsor has completed multiple full-cycle renovations and has demonstrated the ability to deliver renovation programs on time and on budget. Owner equity contribution is meaningful, providing aligned incentives throughout the business plan.`}
         />
       </Section>
 
@@ -236,26 +218,27 @@ function CreditMemo({
           html={`
             <table>
               <tbody>
-                <tr><td class="doc-label-cell">Loan Amount</td><td>${amountFmt}</td></tr>
-                <tr><td class="doc-label-cell">Facility Type</td><td>${loan.loanType}</td></tr>
-                <tr><td class="doc-label-cell">Term</td><td>60 months (indicative)</td></tr>
-                <tr><td class="doc-label-cell">Amortization</td><td>25-year schedule, monthly payments</td></tr>
-                <tr><td class="doc-label-cell">Indicative Rate</td><td>SOFR + 275 bps</td></tr>
-                <tr><td class="doc-label-cell">Closing Fee</td><td>1.00% of commitment</td></tr>
-                <tr><td class="doc-label-cell">Target Close</td><td>Within 45 days of credit approval</td></tr>
+                <tr><td class="doc-label-cell">Loan Amount</td><td>$15,000,000</td></tr>
+                <tr><td class="doc-label-cell">Facility Type</td><td>Acquisition + Value-Add (CRE)</td></tr>
+                <tr><td class="doc-label-cell">Property</td><td>100-unit garden-style apartment complex</td></tr>
+                <tr><td class="doc-label-cell">Term</td><td>36 months with two 12-month extension options</td></tr>
+                <tr><td class="doc-label-cell">Amortization</td><td>Interest-only during 24-month renovation/lease-up; 30-yr amortization thereafter</td></tr>
+                <tr><td class="doc-label-cell">Indicative Rate</td><td>SOFR + 350 bps, with rate cap covering term</td></tr>
+                <tr><td class="doc-label-cell">Origination Fee</td><td>1.00% of commitment</td></tr>
+                <tr><td class="doc-label-cell">Target Close</td><td>Within 60 days of credit approval</td></tr>
               </tbody>
             </table>
           `}
         />
       </Section>
 
-      <Section heading="IV. Purpose & Use of Proceeds">
+      <Section heading="IV. Property & Business Plan">
         <Paragraph
-          html={`Proceeds will be used to ${purpose} No portion of the proceeds will be distributed to owners, applied to acquisitions outside the ordinary course, or used for purposes other than those described herein without prior written consent of the lender.`}
+          html={`Proceeds will fund the acquisition of the 100-unit complex and a phased interior renovation program — kitchen and bath upgrades, in-unit washer/dryer additions, and selective common-area improvements. The sponsor's plan targets premiums of $175–$225 per renovated unit, with full lease-up to stabilization within 24 months of close. A dedicated CapEx reserve will be funded at close and drawn against milestone-based renovation completions; no proceeds will be distributed to ownership prior to stabilization.`}
         />
       </Section>
 
-      <Section heading="V. Financial Performance">
+      <Section heading="V. Pro Forma Performance">
         <div className="h-[220px]">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
@@ -277,7 +260,7 @@ function CreditMemo({
                 stroke="#6366f1"
                 strokeWidth={2}
                 dot={false}
-                name="Revenue"
+                name="Effective Gross Income"
               />
               <Line
                 type="monotone"
@@ -285,7 +268,7 @@ function CreditMemo({
                 stroke="#3730a3"
                 strokeWidth={2}
                 dot={false}
-                name="EBITDA"
+                name="Net Operating Income"
               />
               <Legend
                 iconType="square"
@@ -296,7 +279,7 @@ function CreditMemo({
           </ResponsiveContainer>
         </div>
         <Paragraph
-          html={`Revenue has trended upward over the trailing twelve months with stable EBITDA margins and improving free cash flow conversion. Seasonality is modest and aligned with management forecasts. Projected debt service coverage remains above the proposed covenant threshold under both base and downside scenarios.`}
+          html={`Underwritten Effective Gross Income and Net Operating Income trend upward as renovated units lease at premium rents and turnover normalizes. Stabilized Year-2 NOI supports a debt yield of approximately 8.5% and a stabilized DSCR above 1.30x at the proposed indicative rate. Both base and downside scenarios maintain compliance with the proposed covenant package.`}
         />
       </Section>
 
@@ -304,10 +287,11 @@ function CreditMemo({
         <HtmlBlock
           html={`
             <ul>
-              <li>Experienced management team with material industry tenure</li>
-              <li>Diversified customer base with top-five concentration under 30%</li>
-              <li>Trailing-twelve-month DSCR of 1.40x against the proposed facility</li>
-              <li>Meaningful owner capital at risk with personal guaranty availability</li>
+              <li>Experienced multifamily sponsor with a successful value-add track record on comparable garden-style assets</li>
+              <li>Tangible business plan with clear $175–$225 per-unit rent premium underwriting backed by submarket comps</li>
+              <li>Meaningful sponsor equity at risk; CapEx reserve fully funded at close</li>
+              <li>Stabilized Year-2 metrics support healthy debt yield (~8.5%) and DSCR (&gt;1.30x)</li>
+              <li>Liquid, well-located submarket with sub-5% vacancy supporting lease-up assumptions</li>
             </ul>
           `}
         />
@@ -317,9 +301,10 @@ function CreditMemo({
         <HtmlBlock
           html={`
             <ul>
-              <li>Sector sensitivity to interest rates — <em>mitigated</em> by fixed-rate first-mortgage structure on collateral</li>
-              <li>Regional revenue concentration — <em>mitigated</em> by contracted backlog and expanding pipeline</li>
-              <li>Potential margin compression — <em>mitigated</em> by covenant package and quarterly reporting cadence</li>
+              <li>Renovation execution risk (cost overruns, schedule slippage) — <em>mitigated</em> by CapEx reserve, milestone-based draws, and a third-party Property Condition Needs Assessment</li>
+              <li>Lease-up and rent premium risk — <em>mitigated</em> by submarket comp study, monthly leasing/occupancy reporting, and required interest-rate cap</li>
+              <li>Interest rate exposure during the floating-rate period — <em>mitigated</em> by purchased rate cap covering the full term</li>
+              <li>Concentration in a single asset — <em>mitigated</em> by recourse carve-outs, completion guaranty, and stabilization-based deleveraging covenants</li>
             </ul>
           `}
         />
@@ -327,7 +312,7 @@ function CreditMemo({
 
       <Section heading="VIII. Collateral & Security">
         <Paragraph
-          html={`The facility will be secured by a first-priority lien on the financed assets and a blanket lien on business assets including accounts receivable, inventory, and equipment. A limited personal guaranty of the principal owner(s) will be obtained, capped at the outstanding balance. Collateral monitoring will be performed through semi-annual field exams.`}
+          html={`The facility will be secured by a first-priority mortgage on the 100-unit apartment complex, an assignment of leases and rents, and a pledge of operating accounts. The sponsor will provide a limited (carve-out) recourse guaranty covering bad-boy events plus a completion guaranty for the renovation program. An interest-rate cap protecting the lender's debt service position is required at close. Collateral will be monitored through quarterly site inspections and renovation-progress reports.`}
         />
       </Section>
 
@@ -335,11 +320,12 @@ function CreditMemo({
         <HtmlBlock
           html={`
             <ul>
-              <li>Minimum Debt Service Coverage Ratio of <strong>1.25x</strong>, tested quarterly</li>
-              <li>Maximum Total Leverage of <strong>3.50x EBITDA</strong>, tested quarterly</li>
-              <li>Minimum Liquidity of <strong>$500,000</strong> at all times</li>
-              <li>Quarterly CPA-reviewed financial statements within 45 days of period end</li>
-              <li>Annual CPA-audited financials within 120 days of fiscal year end</li>
+              <li>Stabilized Debt Service Coverage Ratio of <strong>1.25x</strong>, tested upon stabilization and quarterly thereafter</li>
+              <li>Minimum Debt Yield of <strong>8.0%</strong> at stabilization</li>
+              <li>Maximum Loan-to-Cost of <strong>75%</strong> at close; Loan-to-Value of <strong>70%</strong> at stabilization</li>
+              <li>Minimum sponsor liquidity of <strong>$1,500,000</strong> tested quarterly</li>
+              <li>Renovation milestones reported monthly; completion of program within <strong>24 months</strong> of close</li>
+              <li>Quarterly operating statements and rent rolls within 30 days of period end; annual CPA-reviewed financials within 120 days of fiscal year end</li>
             </ul>
           `}
         />
