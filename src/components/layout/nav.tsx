@@ -3,8 +3,8 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
-  ListChecks,
-  LayoutList,
+  TrendingUp,
+  ShieldAlert,
   ClipboardList,
 } from "lucide-react";
 import {
@@ -16,8 +16,8 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { icon: ListChecks, label: "Opportunities", href: "/opportunities" },
-  { icon: LayoutList, label: "Risks", href: "/risks" },
+  { icon: TrendingUp, label: "Opportunities", href: "/opportunities" },
+  { icon: ShieldAlert, label: "Risks", href: "/risks" },
   { icon: ClipboardList, label: "Loan Evaluation", href: "/loan-evaluation" },
 ];
 

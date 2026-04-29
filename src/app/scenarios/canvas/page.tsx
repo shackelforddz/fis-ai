@@ -1006,7 +1006,7 @@ function CanvasView() {
               Commercial Real Estate Loan Scenario
             </h1>
             <p className="text-lg text-muted-foreground leading-7 mt-1">
-              $2,500,000 Commercial Real Estate Loan
+              $15,000,000 Commercial Real Estate Loan
             </p>
           </div>
           {editMode ? (
