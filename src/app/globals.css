@@ -106,8 +106,9 @@
   outline: none;
 }
 
+svg,
 svg * {
-  vector-effect: non-scaling-stroke;
+  vector-effect: non-scaling-stroke !important;
 }
 
 .react-flow__edge.selected .react-flow__edge-path,
