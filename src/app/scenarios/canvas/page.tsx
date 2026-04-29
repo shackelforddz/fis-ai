@@ -1301,6 +1301,8 @@ function DataTableDialog({
   );
 }
 
+const ZOOM_PRESETS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2] as const;
+
 function CanvasControls({
   handMode,
   setHandMode,
@@ -1309,7 +1311,23 @@ function CanvasControls({
   setHandMode: (v: boolean) => void;
 }) {
   const zoom = useStore((s) => s.transform[2]);
-  const { fitView } = useReactFlow();
+  const { fitView, zoomTo } = useReactFlow();
+  const [zoomMenuOpen, setZoomMenuOpen] = useState(false);
+  const zoomMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!zoomMenuOpen) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        zoomMenuRef.current &&
+        !zoomMenuRef.current.contains(e.target as globalThis.Node)
+      ) {
+        setZoomMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [zoomMenuOpen]);
 
   return (
     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 bg-gray-800 rounded-full p-2 flex items-center gap-2">
@@ -1353,14 +1371,62 @@ function CanvasControls({
         <Redo2 className="size-4" />
       </button>
       <span className="w-px h-5 bg-border" />
-      <button
-        type="button"
-        onClick={() => fitView({ padding: 0.15 })}
-        className="flex items-center gap-1 pl-2 pr-1 text-sm text-white hover:opacity-80 transition"
-      >
-        <span>{Math.round(zoom * 100)}%</span>
-        <ChevronDown className="size-4" />
-      </button>
+      <div className="relative" ref={zoomMenuRef}>
+        <button
+          type="button"
+          aria-haspopup="menu"
+          aria-expanded={zoomMenuOpen}
+          onClick={() => setZoomMenuOpen((o) => !o)}
+          className="flex items-center gap-1 pl-2 pr-1 text-sm text-white hover:opacity-80 transition"
+        >
+          <span>{Math.round(zoom * 100)}%</span>
+          <ChevronDown
+            className={`size-4 transition-transform ${
+              zoomMenuOpen ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+        {zoomMenuOpen && (
+          <div
+            role="menu"
+            className="absolute bottom-full mb-2 right-0 w-[140px] bg-popover border border-border rounded-xl overflow-hidden shadow-lg"
+          >
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                fitView({ padding: 0.15, duration: 300 });
+                setZoomMenuOpen(false);
+              }}
+              className="w-full text-left px-3 py-2 text-sm text-muted-foreground hover:bg-accent/50 hover:text-foreground transition-colors"
+            >
+              Fit to view
+            </button>
+            <div className="h-px bg-border" />
+            {ZOOM_PRESETS.map((level) => {
+              const isActive = Math.abs(zoom - level) < 0.01;
+              return (
+                <button
+                  key={level}
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    zoomTo(level, { duration: 300 });
+                    setZoomMenuOpen(false);
+                  }}
+                  className={`w-full text-left px-3 py-2 text-sm transition-colors ${
+                    isActive
+                      ? "text-foreground bg-accent"
+                      : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                  }`}
+                >
+                  {Math.round(level * 100)}%
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
