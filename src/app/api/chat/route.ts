@@ -3,6 +3,7 @@ import { streamText, UIMessage, convertToModelMessages } from "ai";
 import {
   borrowers,
   loanEvaluations,
+  loanDetailOverrides,
   riskEntries,
   covenants,
   covenantSchedule,
@@ -72,6 +73,7 @@ const PORTFOLIO_CONTEXT = JSON.stringify({
     experianStats,
     ficoStats,
   },
+  loanDetailOverrides,
   borrowerDetailCharts: {
     operatingBufferSeries,
     paymentFlowSeries,

@@ -109,6 +109,7 @@
 svg,
 svg * {
   vector-effect: non-scaling-stroke !important;
+  stroke-width: 2 !important;
 }
 
 .react-flow__edge.selected .react-flow__edge-path,

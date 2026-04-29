@@ -310,9 +310,9 @@ export default function BorrowerRiskDetailPage({
           </div>
         </div>
 
-        {/* Related successful opportunities */}
+        {/* Related successful resolutions */}
         <SectionCard
-          title="Related successful opportunities"
+          title="Related Successful Resolutions"
           subtitle="Real-time Indicators"
         >
           <Table>

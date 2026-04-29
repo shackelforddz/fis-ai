@@ -18,6 +18,7 @@ import { SectionCard } from "@/components/borrower/section-card";
 import { AnimateInView } from "@/components/ui/animate-in-view";
 import {
   loanEvaluations,
+  loanDetailOverrides,
   performanceData,
   erpData,
   experianScore,
@@ -211,27 +212,15 @@ export default function LoanDetailPage({
   const loanTypeLabel =
     loan.loanType === "CRE Refinance" ? "Commercial Real Estate" : loan.loanType;
 
-  const isLoan001 = loan.id === "loan-001";
-  const subheading = isLoan001
-    ? "$4.2M for the acquisition and light renovation of a mixed-use building (Ground floor retail + 12 loft apartments)"
-    : `${loanAmountFormatted} ${loanTypeLabel} Loan`;
-
-  const summarySections: Array<{ heading?: string; body: string }> = isLoan001
-    ? [
-        {
-          heading: "Rule Triggered",
-          body: "RULE_CREDIT_042: DSCR < 1.25x. System Logic: The current rent roll provides enough cash flow to cover the debt, but the margin of safety is below the standard bank threshold due to a recent spike in local property taxes.",
-        },
-        {
-          heading: "Recommendation",
-          body: "Counter-Offer Potential: The system suggests that if the loan amount is reduced to $3.8M, the DSCR would return to a pass state (1.30x).",
-        },
-      ]
-    : [
-        {
-          body: "Borrower shows consistent 15% WoW growth in servicing volumes. Eligible for credit line expansion up to $500k. Company showing 12.4% increase in headcount.",
-        },
-      ];
+  const override = loanDetailOverrides[loan.id];
+  const subheading =
+    override?.subheading ?? `${loanAmountFormatted} ${loanTypeLabel} Loan`;
+  const summarySections: Array<{ heading?: string; body: string }> =
+    override?.summarySections ?? [
+      {
+        body: "Borrower shows consistent 15% WoW growth in servicing volumes. Eligible for credit line expansion up to $500k. Company showing 12.4% increase in headcount.",
+      },
+    ];
 
   return (
     <div className="flex flex-col gap-6">
@@ -341,7 +330,7 @@ export default function LoanDetailPage({
             <h2 className="text-2xl text-foreground">Document Repository</h2>
             <p className="text-xs text-muted-foreground">Real-time Indicators</p>
           </div>
-          <Button variant="outline">New Document</Button>
+          <Button variant="secondary">New Document</Button>
         </div>
         <Table>
           <TableHeader>
@@ -377,15 +366,15 @@ export default function LoanDetailPage({
         </Table>
       </div>
 
-      {/* Scenario Analysis */}
+      {/* Visual Scenario Analysis */}
       <div className="border border-border rounded-xl p-6 flex flex-col gap-6">
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-2xl text-foreground">Scenario Analysis</h2>
+            <h2 className="text-2xl text-foreground">Visual Scenario Analysis</h2>
             <p className="text-xs text-muted-foreground">Real-time Indicators</p>
           </div>
           <Button
-            variant="outline"
+            variant="secondary"
             render={<Link href={`/scenarios?borrower=${loan.id}`} />}
           >
             New Analysis

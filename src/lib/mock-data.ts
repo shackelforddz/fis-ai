@@ -1656,3 +1656,28 @@ export const borrowerProductHoldings = [
     products: ["Seasonal Revolver", "Crop Insurance Financing"],
   },
 ];
+
+// Per-loan narrative overrides shown on the loan detail page hero card
+// (subheading + summary sections). The copilot uses these to give consistent
+// answers when the user references a specific loan.
+export interface LoanDetailOverride {
+  subheading?: string;
+  summarySections: Array<{ heading?: string; body: string }>;
+}
+
+export const loanDetailOverrides: Record<string, LoanDetailOverride> = {
+  "loan-001": {
+    subheading:
+      "$4.2M for the acquisition and light renovation of a mixed-use building (Ground floor retail + 12 loft apartments)",
+    summarySections: [
+      {
+        heading: "Rule Triggered",
+        body: "RULE_CREDIT_042: DSCR < 1.25x. System Logic: The current rent roll provides enough cash flow to cover the debt, but the margin of safety is below the standard bank threshold due to a recent spike in local property taxes.",
+      },
+      {
+        heading: "Recommendation",
+        body: "Counter-Offer Potential: The system suggests that if the loan amount is reduced to $3.8M, the DSCR would return to a pass state (1.30x).",
+      },
+    ],
+  },
+};

@@ -181,7 +181,7 @@ const NODE_DATA_TABLES: Record<string, DataTable> = {
     ],
   },
   multi: {
-    title: "Multi-Variate Scenario Analysis",
+    title: "Multi-Variate Visual Scenario Analysis",
     description:
       "Combined impact of rising rates, a six-month construction delay, and softer lease-up across four scenarios.",
     columns: [
@@ -240,7 +240,7 @@ const LIBRARY_VISUALS: {
   },
   {
     id: "multi-chart",
-    title: "Multi-Variate Scenario Analysis",
+    title: "Multi-Variate Visual Scenario Analysis",
     kpis: [
       { label: "Moderate Stress DSCR", value: "1.08x", subLabel: "Elevated" },
       { label: "Equity IRR", value: "6.8%", subLabel: "5-yr, moderate" },
@@ -1084,7 +1084,7 @@ function CanvasBoard() {
           type: "source",
           position,
           data: {
-            title: "Multi-Variate Scenario Analysis",
+            title: "Multi-Variate Visual Scenario Analysis",
             subtitle: prompt,
           },
         };

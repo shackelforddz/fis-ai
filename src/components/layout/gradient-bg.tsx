@@ -33,6 +33,7 @@ export function GradientBg({ className }: { className?: string }) {
           height="298"
           viewBox="0 0 1440 298"
           fill="none"
+          preserveAspectRatio="none"
           xmlns="http://www.w3.org/2000/svg"
           className="absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out"
           style={{ opacity: color === activeColor ? 1 : 0 }}
