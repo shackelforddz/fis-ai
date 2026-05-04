@@ -87,6 +87,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { CopilotChat } from "@/components/layout/copilot-panel";
 import {
   borrowers,
   loanEvaluations,
@@ -1435,49 +1436,55 @@ function LibraryPanel() {
   const { editMode } = useContext(DocEditContext);
   return (
     <aside className="relative z-10 w-[360px] shrink-0 h-full backdrop-blur-xl bg-glass rounded-xl p-6 flex flex-col gap-6 overflow-hidden">
-      <Tabs defaultValue="library">
+      <Tabs defaultValue="library" className="flex-1 min-h-0">
         <TabsList variant="line">
           <TabsTrigger value="copilot">Lenders Copilot</TabsTrigger>
           <TabsTrigger value="library">Library</TabsTrigger>
         </TabsList>
-      </Tabs>
 
-      {editMode ? (
-        <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-4 pr-1">
-          {LIBRARY_VISUALS.map((visual) => (
-            <LibraryVisualCard
-              key={visual.id}
-              id={visual.id}
-              title={visual.title}
-            />
-          ))}
-        </div>
-      ) : (
-        <Tabs defaultValue="data" className="flex-1 min-h-0">
-          <TabsList className="w-full">
-            <TabsTrigger value="data">Data</TabsTrigger>
-            <TabsTrigger value="outputs">Outputs</TabsTrigger>
-          </TabsList>
-          <TabsContent
-            value="data"
-            className="flex flex-col gap-4 min-h-0 overflow-y-auto"
-          >
-            {LIBRARY_NODES.map((node) => (
-              <LibraryNodeCard
-                key={node.id}
-                dataKey={node.id}
-                title={node.title}
-              />
-            ))}
-            <Button variant="secondary" className="w-full mt-auto">
-              Upload Data
-            </Button>
-          </TabsContent>
-          <TabsContent value="outputs" className="flex flex-col gap-4">
-            <p className="text-sm text-muted-foreground">No outputs yet.</p>
-          </TabsContent>
-        </Tabs>
-      )}
+        <TabsContent value="copilot" className="min-h-0 flex flex-col gap-4">
+          <CopilotChat />
+        </TabsContent>
+
+        <TabsContent value="library" className="min-h-0 flex flex-col gap-6">
+          {editMode ? (
+            <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-4 pr-1">
+              {LIBRARY_VISUALS.map((visual) => (
+                <LibraryVisualCard
+                  key={visual.id}
+                  id={visual.id}
+                  title={visual.title}
+                />
+              ))}
+            </div>
+          ) : (
+            <Tabs defaultValue="data" className="flex-1 min-h-0">
+              <TabsList className="w-full">
+                <TabsTrigger value="data">Data</TabsTrigger>
+                <TabsTrigger value="outputs">Outputs</TabsTrigger>
+              </TabsList>
+              <TabsContent
+                value="data"
+                className="flex flex-col gap-4 min-h-0 overflow-y-auto"
+              >
+                {LIBRARY_NODES.map((node) => (
+                  <LibraryNodeCard
+                    key={node.id}
+                    dataKey={node.id}
+                    title={node.title}
+                  />
+                ))}
+                <Button variant="secondary" className="w-full mt-auto">
+                  Upload Data
+                </Button>
+              </TabsContent>
+              <TabsContent value="outputs" className="flex flex-col gap-4">
+                <p className="text-sm text-muted-foreground">No outputs yet.</p>
+              </TabsContent>
+            </Tabs>
+          )}
+        </TabsContent>
+      </Tabs>
     </aside>
   );
 }
