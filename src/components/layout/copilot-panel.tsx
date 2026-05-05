@@ -4,6 +4,7 @@ import { useRef, useEffect, useState, useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { useChat } from "@ai-sdk/react";
 import { Chat } from "@ai-sdk/react";
+import type { UIMessage } from "ai";
 import { Plus, Send, Square } from "lucide-react";
 import {
   Bar,
@@ -18,8 +19,56 @@ import {
   XAxis,
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
+import { borrowers } from "@/lib/mock-data";
 
-type PromptSuggestion = { badge?: string; prompt: string };
+type PromptSuggestion = { badge?: string; prompt: string; response?: string };
+
+function buildVanguardHealthResponse(): string {
+  const v = borrowers.find((b) => b.name === "Vanguard Logistics Ltd.");
+  if (!v) return "Vanguard data not available.";
+
+  const lastContact = new Date(v.lastContactDate).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+  const signals = v.signals
+    .map((s) => `- **${s.text}** — signal strength: ${s.strength}`)
+    .join("\n");
+  const expansion = `$${(v.creditLineExpansion / 1000).toLocaleString()}K`;
+
+  return `## ${v.name} — Health Snapshot
+
+**${v.name}** (Facility **${v.facilityId}**, ${v.industry}) is currently flagged as an **${v.opportunityTypes.join(", ")}** with an opportunity score of **${v.opportunityScore}/100** and confidence of **${v.confidenceScore}/100**.
+
+## Key signals
+${signals}
+
+## Operating momentum
+- Servicing volumes up **${v.wowGrowthPct}% week-over-week**
+- Headcount up **${v.headcountGrowthPct}%** — investing ahead of demand
+- Current facility: **${v.currentFacilitySummary}**
+- Last contact: **${lastContact}** by ${v.assignedOfficer}
+
+\`\`\`chart
+{
+  "type": "bar",
+  "title": "Vanguard Health Indicators",
+  "unit": "%",
+  "data": [
+    { "name": "Rev YoY", "value": 34 },
+    { "name": "Line Util", "value": 85 },
+    { "name": "WoW Growth", "value": ${v.wowGrowthPct} },
+    { "name": "Headcount", "value": ${v.headcountGrowthPct} }
+  ]
+}
+\`\`\`
+
+## Bottom line
+${v.summary} Eligible for a credit line expansion up to **${expansion}**, with an estimated upsell range of **${v.estimatedUpsellRange ?? "—"}** via a **${v.suggestedProduct ?? "tailored product"}**.`;
+}
+
+const VANGUARD_SUMMARY = buildVanguardHealthResponse();
 
 const DEFAULT_PROMPTS: PromptSuggestion[] = [
   {
@@ -49,6 +98,11 @@ const DEFAULT_PROMPTS: PromptSuggestion[] = [
 ];
 
 const OPPORTUNITY_PROMPTS: PromptSuggestion[] = [
+  {
+    badge: "Recommended",
+    prompt: "Create a quick summary of Vanguard's health",
+    response: VANGUARD_SUMMARY,
+  },
   {
     badge: "Defensive insights",
     prompt:
@@ -486,10 +540,9 @@ export function CopilotPanel({ className }: { className?: string }) {
 }
 
 export function CopilotChat() {
-  const chat = useMemo(() => new Chat({ messages: [] }), []);
-  const { messages, sendMessage, stop, status, error, clearError } = useChat({
-    chat,
-  });
+  const chat = useMemo(() => new Chat<UIMessage>({ messages: [] }), []);
+  const { messages, sendMessage, setMessages, stop, status, error, clearError } =
+    useChat<UIMessage>({ chat });
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const promptSuggestions = usePromptSuggestions();
@@ -507,6 +560,28 @@ export function CopilotChat() {
     if (!trimmed || isLoading) return;
     setInput("");
     sendMessage({ text: trimmed });
+  }
+
+  function handleSuggestion(suggestion: PromptSuggestion) {
+    if (isLoading) return;
+    if (suggestion.response) {
+      const ts = Date.now();
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `u-${ts}`,
+          role: "user",
+          parts: [{ type: "text", text: suggestion.prompt }],
+        },
+        {
+          id: `a-${ts + 1}`,
+          role: "assistant",
+          parts: [{ type: "text", text: suggestion.response! }],
+        },
+      ]);
+      return;
+    }
+    handleSend(suggestion.prompt);
   }
 
   const hasMessages = messages.length > 0;
@@ -556,7 +631,7 @@ export function CopilotChat() {
                 <button
                   key={i}
                   className="bg-gray-900 rounded-md p-4 text-sm text-muted-foreground text-left hover:bg-secondary transition-colors w-[200px] min-w-[200px] shrink-0 flex flex-col gap-2"
-                  onClick={() => handleSend(suggestion.prompt)}
+                  onClick={() => handleSuggestion(suggestion)}
                 >
                   {suggestion.badge && (
                     <Badge variant="secondary" className="self-start">

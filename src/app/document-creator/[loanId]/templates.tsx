@@ -82,6 +82,46 @@ function HtmlBlock({ html, className }: { html: string; className?: string }) {
   );
 }
 
+function getRiskTier(score: number) {
+  if (score <= 30) return { label: "Low", color: "#16a34a" };
+  if (score <= 60) return { label: "Moderate", color: "#ca8a04" };
+  if (score <= 80) return { label: "Elevated", color: "#ea580c" };
+  return { label: "High", color: "#dc2626" };
+}
+
+function RiskRating({ score }: { score: number }) {
+  const tier = getRiskTier(score);
+  return (
+    <section className="border border-gray-200 rounded-lg p-4 flex flex-col gap-3">
+      <div className="flex items-center gap-3">
+        <span
+          className="text-base font-bold"
+          style={{ color: tier.color }}
+        >
+          {tier.label} Risk Rating
+        </span>
+        <span className="ml-auto text-sm font-semibold text-gray-900">
+          {score}<span className="text-gray-500 font-normal">/100</span>
+        </span>
+      </div>
+      <div className="flex flex-col gap-1">
+        <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+          <div
+            className="h-full rounded-full"
+            style={{ width: `${score}%`, backgroundColor: tier.color }}
+          />
+        </div>
+        <div className="flex justify-between text-[10px] text-gray-500">
+          <span>Low</span>
+          <span>Moderate</span>
+          <span>Elevated</span>
+          <span>High</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function TemplateContent({
   templateKey,
   loan,
@@ -201,6 +241,8 @@ function CreditMemo({
 
   return (
     <>
+      <RiskRating score={loan.riskScore} />
+
       <Section heading="I. Executive Summary">
         <Paragraph
           html={`<strong>${loan.borrowerName}</strong>, a multifamily real estate investor, is requesting a <strong>$15,000,000</strong> acquisition + value-add loan to purchase a <strong>100-unit garden-style apartment complex</strong>. The sponsor's plan is to deploy a unit-by-unit renovation program, reposition the rent roll to current market levels, and stabilize the asset within <strong>24 months</strong> of close. The request was submitted on ${submission} and assigned to ${loan.assignedOfficer}. Our automated decisioning engine has produced a confidence score of <strong>${loan.confidenceScore}/100</strong> with an initial analysis of <strong>${loan.analysis.toLowerCase()}</strong>.`}

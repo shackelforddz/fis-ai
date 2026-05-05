@@ -709,6 +709,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     submissionDate: "2026-03-15",
     assignedOfficer: "Sarah Martinez",
     confidenceScore: 94,
+    riskScore: 22,
   },
   {
     id: "loan-002",
@@ -721,6 +722,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     submissionDate: "2026-03-12",
     assignedOfficer: "James Chen",
     confidenceScore: 72,
+    riskScore: 58,
   },
   {
     id: "loan-003",
@@ -733,6 +735,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     submissionDate: "2026-03-10",
     assignedOfficer: "Michael Rodriguez",
     confidenceScore: 38,
+    riskScore: 87,
   },
   {
     id: "loan-004",
@@ -745,6 +748,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     submissionDate: "2026-03-08",
     assignedOfficer: "Sarah Martinez",
     confidenceScore: 88,
+    riskScore: 28,
   },
   {
     id: "loan-005",
@@ -757,6 +761,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     submissionDate: "2026-03-05",
     assignedOfficer: "James Chen",
     confidenceScore: 31,
+    riskScore: 92,
   },
   {
     id: "loan-006",
@@ -769,6 +774,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     submissionDate: "2026-03-01",
     assignedOfficer: "Michael Rodriguez",
     confidenceScore: 65,
+    riskScore: 54,
   },
   {
     id: "loan-007",
@@ -781,6 +787,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     submissionDate: "2026-02-28",
     assignedOfficer: "Sarah Martinez",
     confidenceScore: 42,
+    riskScore: 81,
   },
   {
     id: "loan-008",
@@ -793,6 +800,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     submissionDate: "2026-02-25",
     assignedOfficer: "James Chen",
     confidenceScore: 91,
+    riskScore: 18,
   },
   {
     id: "loan-009",
@@ -805,6 +813,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     submissionDate: "2026-02-20",
     assignedOfficer: "Michael Rodriguez",
     confidenceScore: 27,
+    riskScore: 89,
   },
   {
     id: "loan-010",
@@ -817,6 +826,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     submissionDate: "2026-02-18",
     assignedOfficer: "Sarah Martinez",
     confidenceScore: 69,
+    riskScore: 62,
   },
   {
     id: "loan-011",
@@ -829,6 +839,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     submissionDate: "2026-02-15",
     assignedOfficer: "James Chen",
     confidenceScore: 85,
+    riskScore: 32,
   },
   {
     id: "loan-012",
@@ -841,6 +852,7 @@ export const loanEvaluations: LoanEvaluation[] = [
     submissionDate: "2026-02-10",
     assignedOfficer: "Michael Rodriguez",
     confidenceScore: 61,
+    riskScore: 56,
   },
 ];
 

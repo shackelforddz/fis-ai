@@ -266,4 +266,5 @@ export interface LoanEvaluation {
   submissionDate: string;
   assignedOfficer: string;
   confidenceScore: number;
+  riskScore: number;
 }

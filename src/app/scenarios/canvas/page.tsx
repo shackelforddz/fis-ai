@@ -37,6 +37,8 @@ import {
   AlignJustify,
   Palette,
   Image as ImageIcon,
+  Upload,
+  Network,
   X,
 } from "lucide-react";
 import {
@@ -87,6 +89,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { CopilotChat } from "@/components/layout/copilot-panel";
 import {
   borrowers,
@@ -96,15 +99,19 @@ import {
 import type { Borrower, LoanEvaluation } from "@/lib/types";
 import { TemplateContent } from "@/app/document-creator/[loanId]/templates";
 
-const LIBRARY_NODES = [
+const LIBRARY_NODES: { id: string; title: string; upload?: boolean }[] = [
   { id: "sensitivity", title: "Sensitivity Analysis" },
   { id: "performance", title: "Performance Analysis" },
   { id: "erp", title: "ERP Data" },
+  { id: "renovation-overruns", title: "Renovation Cost Overruns", upload: true },
 ];
+
+type DataSource = { name: string; type: "fis" | "third-party" };
 
 type DataTable = {
   title: string;
   description: string;
+  source: DataSource;
   columns: string[];
   rows: string[][];
 };
@@ -114,6 +121,7 @@ const NODE_DATA_TABLES: Record<string, DataTable> = {
     title: "Sensitivity Analysis",
     description:
       "Impact on key underwriting metrics across a range of single-variable shocks holding all other inputs at base case.",
+    source: { name: "FIS Data", type: "fis" },
     columns: [
       "Variable",
       "Downside (-20%)",
@@ -141,6 +149,7 @@ const NODE_DATA_TABLES: Record<string, DataTable> = {
     title: "Performance Analysis",
     description:
       "Trailing six-quarter operating performance vs. the prior comparable period and underwriting plan.",
+    source: { name: "FIS Data", type: "fis" },
     columns: ["Metric", "Q3 2025", "Q4 2025", "Q1 2026", "Q2 2026", "YoY Δ"],
     rows: [
       ["Revenue", "$3.85M", "$4.00M", "$4.20M", "$4.50M", "+8.2%"],
@@ -161,6 +170,7 @@ const NODE_DATA_TABLES: Record<string, DataTable> = {
     title: "ERP Data",
     description:
       "Live account balances pulled from the borrower's ERP feed, reconciled against the prior month close.",
+    source: { name: "NetSuite", type: "third-party" },
     columns: ["Account", "Current", "Prior Period", "MoM Variance", "YoY Δ"],
     rows: [
       ["Cash & Equivalents", "$2.40M", "$2.10M", "+$300K", "+18.5%"],
@@ -185,6 +195,7 @@ const NODE_DATA_TABLES: Record<string, DataTable> = {
     title: "Multi-Variate Visual Scenario Analysis",
     description:
       "Combined impact of rising rates, a six-month construction delay, and softer lease-up across four scenarios.",
+    source: { name: "FIS Scenario Engine", type: "fis" },
     columns: [
       "Variable",
       "Base Case",
@@ -294,6 +305,7 @@ type SourceData = {
   prompt?: string;
   suggestedPrompt?: string;
   dataKey?: string;
+  upload?: boolean;
 };
 
 type SourceNodeType = Node<SourceData, "source">;
@@ -309,6 +321,7 @@ function SourceNode({ id, data, selected }: NodeProps<SourceNodeType>) {
   const [focused, setFocused] = useState(false);
   const showSuggestion =
     focused && prompt.length === 0 && !!data.suggestedPrompt;
+  const isWarning = !!data.upload;
   return (
     <div
       className={`bg-gray-900 rounded-md p-4 w-[220px] flex flex-col gap-3 transition-shadow ${
@@ -322,18 +335,20 @@ function SourceNode({ id, data, selected }: NodeProps<SourceNodeType>) {
           <p className="flex-1 min-w-0 text-sm font-medium text-white">
             {data.title}
           </p>
-          <button
-            type="button"
-            aria-label="View data"
-            onClick={(e) => {
-              e.stopPropagation();
-              onView(data.dataKey ?? id);
-            }}
-            onPointerDown={(e) => e.stopPropagation()}
-            className="nodrag shrink-0 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <Eye className="size-4" />
-          </button>
+          {!isWarning && (
+            <button
+              type="button"
+              aria-label="View data"
+              onClick={(e) => {
+                e.stopPropagation();
+                onView(data.dataKey ?? id);
+              }}
+              onPointerDown={(e) => e.stopPropagation()}
+              className="nodrag shrink-0 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Eye className="size-4" />
+            </button>
+          )}
         </div>
         {data.subtitle && (
           <p className="text-xs text-muted-foreground leading-4 mt-1">
@@ -341,44 +356,57 @@ function SourceNode({ id, data, selected }: NodeProps<SourceNodeType>) {
           </p>
         )}
       </div>
-      <div className="bg-gray-800 rounded-md h-[88px] flex items-center justify-center">
-        <Table2 className="size-7 text-muted-foreground" />
-      </div>
-      <div className="relative nodrag">
-        {showSuggestion && (
-          <button
-            type="button"
-            onMouseDown={(e) => {
-              e.preventDefault();
-              const suggestion = data.suggestedPrompt ?? "";
-              setPrompt(suggestion);
-              onGenerate(id, suggestion);
-            }}
-            className="absolute bottom-full left-0 right-0 mb-2 bg-popover border border-border rounded-md p-3 text-left text-xs text-muted-foreground leading-4 hover:text-foreground transition-colors"
-          >
-            <span className="block text-[10px] uppercase tracking-wide text-muted-foreground/70 mb-1">
-              Suggested
-            </span>
-            {data.suggestedPrompt}
-          </button>
+      <div
+        className={`rounded-md h-[88px] flex flex-col items-center justify-center gap-1 ${
+          isWarning ? "bg-amber-500/10" : "bg-gray-800"
+        }`}
+      >
+        {data.upload ? (
+          <>
+            <Upload className="size-6 text-amber-400" />
+            <span className="text-xs text-amber-300">Upload Data</span>
+          </>
+        ) : (
+          <Table2 className="size-7 text-muted-foreground" />
         )}
-        <div className="bg-card rounded-full flex items-center gap-2 pl-4 pr-1 py-1">
-          <input
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            className="flex-1 min-w-0 bg-transparent text-xs text-foreground placeholder:text-muted-foreground leading-4 outline-none"
-            placeholder="Your prompt"
-          />
-          <button
-            type="button"
-            className="size-6 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shrink-0"
-          >
-            <Send className="size-3" />
-          </button>
-        </div>
       </div>
+      {!isWarning && (
+        <div className="relative nodrag">
+          {showSuggestion && (
+            <button
+              type="button"
+              onMouseDown={(e) => {
+                e.preventDefault();
+                const suggestion = data.suggestedPrompt ?? "";
+                setPrompt(suggestion);
+                onGenerate(id, suggestion);
+              }}
+              className="absolute bottom-full left-0 right-0 mb-2 bg-popover border border-border rounded-md p-3 text-left text-xs text-muted-foreground leading-4 hover:text-foreground transition-colors"
+            >
+              <span className="block text-[10px] uppercase tracking-wide text-muted-foreground/70 mb-1">
+                Suggested
+              </span>
+              {data.suggestedPrompt}
+            </button>
+          )}
+          <div className="bg-card rounded-full flex items-center gap-2 pl-4 pr-1 py-1">
+            <input
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              className="flex-1 min-w-0 bg-transparent text-xs text-foreground placeholder:text-muted-foreground leading-4 outline-none"
+              placeholder="Your prompt"
+            />
+            <button
+              type="button"
+              className="size-6 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shrink-0"
+            >
+              <Send className="size-3" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -912,10 +940,10 @@ const initialNodes: FlowNode[] = [
     data: { title: "Performance Analysis" },
   },
   {
-    id: "erp",
+    id: "renovation-overruns",
     type: "source",
     position: { x: 0, y: 500 },
-    data: { title: "ERP Data" },
+    data: { title: "Renovation Cost Overruns", upload: true },
   },
   {
     id: "doc",
@@ -928,7 +956,7 @@ const initialNodes: FlowNode[] = [
 const initialEdges: Edge[] = [
   { id: "e-s-d", source: "sensitivity", target: "doc", reconnectable: true },
   { id: "e-p-d", source: "performance", target: "doc", reconnectable: true },
-  { id: "e-er-d", source: "erp", target: "doc", reconnectable: true },
+  { id: "e-er-d", source: "renovation-overruns", target: "doc", reconnectable: true },
 ];
 
 export default function CanvasPage() {
@@ -958,7 +986,14 @@ function CanvasView() {
   const loanDocValue = useMemo(() => ({ loan, borrower }), [loan, borrower]);
 
   const [editMode, setEditMode] = useState(false);
+  const [submitOpen, setSubmitOpen] = useState(false);
+  const [viewingNodeId, setViewingNodeId] = useState<string | null>(null);
   const [insertedVisuals, setInsertedVisuals] = useState<InsertedVisual[]>([]);
+  const onView = useCallback(
+    (nodeId: string) => setViewingNodeId(nodeId),
+    [],
+  );
+  const viewingTable = viewingNodeId ? NODE_DATA_TABLES[viewingNodeId] : null;
   const docEditValue = useMemo(
     () => ({
       editMode,
@@ -1019,8 +1054,24 @@ function CanvasView() {
               Close
             </Button>
           )}
-          <Button>Save</Button>
+          <Button onClick={() => setSubmitOpen(true)}>Submit</Button>
         </div>
+
+        <Dialog open={submitOpen} onOpenChange={setSubmitOpen}>
+          <DialogContent
+            showCloseButton={false}
+            className="bg-background ring-0 border border-border p-0 gap-0 sm:max-w-[420px]"
+          >
+            <DialogHeader className="p-4 pb-3 gap-1.5">
+              <DialogTitle className="text-base font-medium text-foreground font-sans">
+                Pushed to the core
+              </DialogTitle>
+            </DialogHeader>
+            <DialogFooter className="m-0 border-t border-border bg-gray-900/50 p-4 rounded-b-xl sm:justify-end">
+              <DialogClose render={<Button size="sm" />}>Close</DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {editMode && (
           <div className="shrink-0">
@@ -1031,22 +1082,29 @@ function CanvasView() {
         <div className="flex-1 min-h-0 relative">
           <LoanDocContext.Provider value={loanDocValue}>
             <ReactFlowProvider>
-              <CanvasBoard />
+              <CanvasBoard onView={onView} />
             </ReactFlowProvider>
           </LoanDocContext.Provider>
         </div>
       </main>
 
-      <LibraryPanel />
+      <LibraryPanel onView={onView} />
+
+      <DataTableDialog
+        table={viewingTable}
+        open={viewingNodeId !== null}
+        onOpenChange={(open) => {
+          if (!open) setViewingNodeId(null);
+        }}
+      />
     </DocEditContext.Provider>
   );
 }
 
-function CanvasBoard() {
+function CanvasBoard({ onView }: { onView: (nodeId: string) => void }) {
   const [nodes, setNodes, onNodesChange] = useNodesState<FlowNode>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(initialEdges);
   const [handMode, setHandMode] = useState(false);
-  const [viewingNodeId, setViewingNodeId] = useState<string | null>(null);
   const reconnectSuccessful = useRef(true);
   const { screenToFlowPosition, fitView, setCenter } = useReactFlow();
   const store = useStoreApi();
@@ -1069,8 +1127,6 @@ function CanvasBoard() {
       fitView({ padding: 0.15, duration: 600 });
     }
   }, [editMode, fitView, setCenter, store]);
-
-  const onView = useCallback((nodeId: string) => setViewingNodeId(nodeId), []);
 
   const onGenerate = useCallback(
     (sourceNodeId: string, prompt: string) => {
@@ -1122,8 +1178,6 @@ function CanvasBoard() {
     [onView, onGenerate],
   );
 
-  const viewingTable = viewingNodeId ? NODE_DATA_TABLES[viewingNodeId] : null;
-
   const onConnect = useCallback(
     (params: Connection) =>
       setEdges((eds) => addEdge({ ...params, reconnectable: true }, eds)),
@@ -1162,8 +1216,10 @@ function CanvasBoard() {
       event.preventDefault();
       const dataKey = event.dataTransfer.getData("application/scenario-node");
       if (!dataKey) return;
+      const libNode = LIBRARY_NODES.find((n) => n.id === dataKey);
       const table = NODE_DATA_TABLES[dataKey];
-      if (!table) return;
+      const title = libNode?.title ?? table?.title;
+      if (!title) return;
       const position = screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
@@ -1172,7 +1228,7 @@ function CanvasBoard() {
         id: `${dataKey}-${Date.now()}`,
         type: "source",
         position,
-        data: { title: table.title, dataKey },
+        data: { title, dataKey, upload: libNode?.upload },
       };
       setNodes((nds) => [...nds, newNode]);
     },
@@ -1217,13 +1273,6 @@ function CanvasBoard() {
         style={{ background: "transparent" }}
       />
       <CanvasControls handMode={handMode} setHandMode={setHandMode} />
-      <DataTableDialog
-        table={viewingTable}
-        open={viewingNodeId !== null}
-        onOpenChange={(open) => {
-          if (!open) setViewingNodeId(null);
-        }}
-      />
     </NodeActionsContext.Provider>
   );
 }
@@ -1244,9 +1293,18 @@ function DataTableDialog({
         className="bg-background ring-0 border border-border p-0 gap-0 sm:max-w-[720px] w-[720px] max-h-[85vh] flex flex-col"
       >
         <DialogHeader className="p-4 pb-3 gap-1.5 shrink-0">
-          <DialogTitle className="text-base font-medium text-foreground font-sans">
-            {table?.title ?? ""}
-          </DialogTitle>
+          <div className="flex items-start gap-2">
+            <DialogTitle className="text-base font-medium text-foreground font-sans flex-1">
+              {table?.title ?? ""}
+            </DialogTitle>
+            {table && (
+              <Badge variant="secondary" className="shrink-0">
+                {table.source.type === "fis"
+                  ? table.source.name
+                  : `${table.source.name} · 3rd party`}
+              </Badge>
+            )}
+          </div>
           <DialogDescription>{table?.description ?? ""}</DialogDescription>
         </DialogHeader>
         {table && (
@@ -1432,10 +1490,12 @@ function CanvasControls({
   );
 }
 
-function LibraryPanel() {
+function LibraryPanel({ onView }: { onView: (nodeId: string) => void }) {
   const { editMode } = useContext(DocEditContext);
+  const [uploadOpen, setUploadOpen] = useState(false);
   return (
     <aside className="relative z-10 w-[360px] shrink-0 h-full backdrop-blur-xl bg-glass rounded-xl p-6 flex flex-col gap-6 overflow-hidden">
+      <UploadDataDialog open={uploadOpen} onOpenChange={setUploadOpen} />
       <Tabs defaultValue="library" className="flex-1 min-h-0">
         <TabsList variant="line">
           <TabsTrigger value="copilot">Lenders Copilot</TabsTrigger>
@@ -1465,16 +1525,24 @@ function LibraryPanel() {
               </TabsList>
               <TabsContent
                 value="data"
-                className="flex flex-col gap-4 min-h-0 overflow-y-auto"
+                className="flex flex-col gap-4 min-h-0"
               >
-                {LIBRARY_NODES.map((node) => (
-                  <LibraryNodeCard
-                    key={node.id}
-                    dataKey={node.id}
-                    title={node.title}
-                  />
-                ))}
-                <Button variant="secondary" className="w-full mt-auto">
+                <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-4 pr-1">
+                  {LIBRARY_NODES.map((node) => (
+                    <LibraryNodeCard
+                      key={node.id}
+                      dataKey={node.id}
+                      title={node.title}
+                      upload={node.upload}
+                      onView={onView}
+                    />
+                  ))}
+                </div>
+                <Button
+                  variant="secondary"
+                  className="w-full shrink-0"
+                  onClick={() => setUploadOpen(true)}
+                >
                   Upload Data
                 </Button>
               </TabsContent>
@@ -1508,9 +1576,13 @@ function LibraryVisualCard({ id, title }: { id: VisualId; title: string }) {
 function LibraryNodeCard({
   title,
   dataKey,
+  upload,
+  onView,
 }: {
   title: string;
   dataKey: string;
+  upload?: boolean;
+  onView: (nodeId: string) => void;
 }) {
   return (
     <div
@@ -1523,11 +1595,95 @@ function LibraryNodeCard({
     >
       <div className="flex items-center gap-2">
         <p className="flex-1 text-sm font-medium text-white">{title}</p>
-        <Eye className="size-4 text-muted-foreground" />
+        {!upload && (
+          <button
+            type="button"
+            aria-label="Preview data"
+            draggable={false}
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              onView(dataKey);
+            }}
+            className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <Eye className="size-4" />
+          </button>
+        )}
       </div>
-      <div className="bg-gray-800 rounded-md h-[140px] flex items-center justify-center">
-        <Table2 className="size-12 text-muted-foreground" />
+      <div className="bg-gray-800 rounded-md h-[140px] flex flex-col items-center justify-center gap-2">
+        {upload ? (
+          <>
+            <Upload className="size-10 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">Upload Data</span>
+          </>
+        ) : (
+          <Table2 className="size-12 text-muted-foreground" />
+        )}
       </div>
     </div>
+  );
+}
+
+function UploadDataDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="bg-background ring-0 border border-border p-0 gap-0 sm:max-w-[480px]"
+      >
+        <DialogHeader className="p-4 pb-3 gap-1.5">
+          <DialogTitle className="text-base font-medium text-foreground font-sans">
+            Upload Data
+          </DialogTitle>
+          <DialogDescription>
+            Choose how to bring data into your scenario.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="px-4 pb-4 grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => onOpenChange(false)}
+            className="flex flex-col items-start gap-3 rounded-lg border border-border bg-card p-4 text-left hover:border-primary/40 hover:bg-secondary transition-colors"
+          >
+            <Upload className="size-5 text-primary" />
+            <div>
+              <p className="text-sm font-medium text-foreground">
+                Upload File
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5 leading-4">
+                CSV, XLSX, or JSON from your machine
+              </p>
+            </div>
+          </button>
+          <button
+            type="button"
+            onClick={() => onOpenChange(false)}
+            className="flex flex-col items-start gap-3 rounded-lg border border-border bg-card p-4 text-left hover:border-primary/40 hover:bg-secondary transition-colors"
+          >
+            <Network className="size-5 text-primary" />
+            <div>
+              <p className="text-sm font-medium text-foreground">
+                3rd Party API
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5 leading-4">
+                Connect an external data source
+              </p>
+            </div>
+          </button>
+        </div>
+        <DialogFooter className="m-0 border-t border-border bg-gray-900/50 p-4 rounded-b-xl sm:justify-end">
+          <DialogClose render={<Button variant="outline" size="sm" />}>
+            Cancel
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
